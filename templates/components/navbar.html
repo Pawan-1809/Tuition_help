@@ -1,0 +1,55 @@
+{% load static %}
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-brand" id="nav-brand">
+      <div class="nav-brand-icon">
+        <i data-lucide="graduation-cap"></i>
+      </div>
+      <span>Tuition<span class="text-gradient">Connect</span></span>
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links" id="nav-links">
+      <button
+        class="theme-switcher-wrapper"
+        id="theme-toggle"
+        aria-label="Toggle dark mode"
+      >
+        <div class="theme-switch-track">
+          <div class="theme-switch-thumb"></div>
+        </div>
+      </button>
+
+      {% if user.is_authenticated %} {% if user.is_tutor %}
+      <a href="{% url 'accounts:profile' %}" class="nav-link" id="nav-profile">
+        <i data-lucide="user" style="width: 16px; height: 16px"></i>
+        <span>My Profile</span>
+      </a>
+      <a href="{% url 'chat:inbox' %}" class="nav-link" id="nav-inbox">
+        <i data-lucide="message-square" style="width: 16px; height: 16px"></i>
+        <span>Inbox</span>
+      </a>
+      {% endif %}
+
+      <a href="{% url 'accounts:logout' %}" class="nav-link" id="nav-logout">
+        <i data-lucide="log-out" style="width: 16px; height: 16px"></i>
+        <span>Logout</span>
+      </a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="nav-link" id="nav-login">
+        <i data-lucide="log-in" style="width: 16px; height: 16px"></i>
+        <span>Login</span>
+      </a>
+      <a href="{% url 'accounts:register' %}" class="nav-cta" id="nav-register">
+        <i data-lucide="user-plus" style="width: 16px; height: 16px"></i>
+        <span>Get Started</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,481 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Find Your Perfect
+Tutor{% endblock %} {% block meta_description %}Tuition Connect — India's
+trusted platform to find qualified tutors. Browse by subject, language, price,
+and distance. Start learning today!{% endblock %} {% block content %}
+<!-- ═══ HERO SECTION ═══════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg-shapes">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-tag">
+          <span class="dot"></span>
+          <span>Trusted by thousands of learners</span>
+        </div>
+
+        <h1>
+          Find Your<br />
+          <span class="text-gradient">Perfect Tutor</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Connect with qualified, verified tutors in your area. Filter by
+          subject, language, price range, and distance to find the ideal match
+          for your learning journey.
+        </p>
+
+        <div class="hero-actions">
+          <a
+            href="{% url 'tutors:directory' %}"
+            class="neu-btn neu-btn-primary neu-btn-lg"
+            id="hero-cta-find"
+          >
+            <i data-lucide="search" style="width: 20px; height: 20px"></i>
+            <span>Find a Tutor</span>
+          </a>
+          <a
+            href="{% url 'accounts:register' %}"
+            class="neu-btn neu-btn-outline neu-btn-lg"
+            id="hero-cta-join"
+          >
+            <i data-lucide="user-plus" style="width: 20px; height: 20px"></i>
+            <span>Become a Tutor</span>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div
+              class="hero-stat-number"
+              data-count="{{ total_tutors|default:'500' }}"
+            >
+              0
+            </div>
+            <div class="hero-stat-label">Active Tutors</div>
+          </div>
+          <div class="hero-stat">
+            <div
+              class="hero-stat-number"
+              data-count="{{ total_users|default:'2000' }}"
+            >
+              0
+            </div>
+            <div class="hero-stat-label">Happy Students</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card-stack">
+          <!-- Preview Tutor Card 1 -->
+          <div class="tutor-card-preview">
+            <div class="tutor-card-header">
+              <div
+                class="tutor-card-avatar"
+                style="background: linear-gradient(135deg, #6c5ce7, #a29bfe)"
+              >
+                A
+              </div>
+              <div>
+                <h3 style="font-size: var(--text-base); margin-bottom: 2px">
+                  Ananya Sharma
+                </h3>
+                <span class="tutor-card-method"
+                  ><i
+                    data-lucide="monitor"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  Online</span
+                >
+              </div>
+            </div>
+            <div class="tutor-card-meta">
+              <span class="tutor-card-tag">Mathematics</span>
+              <span class="tutor-card-tag">Physics</span>
+              <span class="tutor-card-tag">Hindi</span>
+            </div>
+            <div class="tutor-card-footer" style="padding-top: var(--space-4)">
+              <span class="tutor-card-price">₹500<small>/hr</small></span>
+              <span class="neu-badge neu-badge-success">Verified</span>
+            </div>
+          </div>
+
+          <!-- Preview Card 2 (background) -->
+          <div class="tutor-card-preview">
+            <div class="tutor-card-header">
+              <div
+                class="tutor-card-avatar"
+                style="background: linear-gradient(135deg, #00cec9, #55efc4)"
+              >
+                R
+              </div>
+              <div>
+                <h3 style="font-size: var(--text-base)">Rahul Verma</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview Card 3 (far background) -->
+          <div class="tutor-card-preview">
+            <div class="tutor-card-header">
+              <div
+                class="tutor-card-avatar"
+                style="background: linear-gradient(135deg, #e84393, #fd79a8)"
+              >
+                P
+              </div>
+              <div>
+                <h3 style="font-size: var(--text-base)">Priya Patel</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ══════════════════════════ -->
+<section
+  class="section"
+  id="how-it-works"
+  style="background: var(--bg-secondary); padding: var(--space-20) 0"
+>
+  <div class="container">
+    <div class="section-header reveal">
+      <h2>How It <span class="text-gradient">Works</span></h2>
+      <p>
+        Get started in just 3 simple steps — whether you're a tutor or a
+        student.
+      </p>
+    </div>
+
+    <div class="grid grid-2" style="gap: var(--space-12); align-items: start">
+      <!-- For Students -->
+      <div class="reveal-left">
+        <h3
+          style="
+            margin-bottom: var(--space-8);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+          "
+        >
+          <span
+            style="
+              background: var(--accent-gradient);
+              padding: var(--space-2) var(--space-4);
+              border-radius: var(--radius-md);
+              color: white;
+              font-size: var(--text-sm);
+            "
+            >Students</span
+          >
+          Find Your Tutor
+        </h3>
+
+        <div
+          class="neu-card-flat"
+          style="
+            margin-bottom: var(--space-6);
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: var(--accent-gradient);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            1
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Create an Account
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              Sign up with Google or your phone number in seconds.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="neu-card-flat"
+          style="
+            margin-bottom: var(--space-6);
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: var(--accent-gradient);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            2
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Search & Filter
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              Use advanced filters to find the perfect tutor by subject, price,
+              language, and distance.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="neu-card-flat"
+          style="
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: var(--accent-gradient);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            3
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Connect & Learn
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              View tutor profiles, check qualifications, and reach out to start
+              your learning journey.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- For Tutors -->
+      <div class="reveal-right">
+        <h3
+          style="
+            margin-bottom: var(--space-8);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+          "
+        >
+          <span
+            style="
+              background: linear-gradient(135deg, #00cec9, #55efc4);
+              padding: var(--space-2) var(--space-4);
+              border-radius: var(--radius-md);
+              color: white;
+              font-size: var(--text-sm);
+            "
+            >Tutors</span
+          >
+          Start Teaching
+        </h3>
+
+        <div
+          class="neu-card-flat"
+          style="
+            margin-bottom: var(--space-6);
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: linear-gradient(135deg, #00cec9, #55efc4);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            1
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Register & Sign Up
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              Create your account and select "Tutor" as your role.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="neu-card-flat"
+          style="
+            margin-bottom: var(--space-6);
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: linear-gradient(135deg, #00cec9, #55efc4);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            2
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Complete Your Profile
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              Fill out your qualifications, subjects, languages, and set your
+              hourly price.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="neu-card-flat"
+          style="
+            display: flex;
+            gap: var(--space-4);
+            align-items: start;
+            padding: var(--space-6);
+          "
+        >
+          <div
+            style="
+              width: 44px;
+              height: 44px;
+              border-radius: var(--radius-full);
+              background: linear-gradient(135deg, #00cec9, #55efc4);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: 800;
+              flex-shrink: 0;
+            "
+          >
+            3
+          </div>
+          <div>
+            <h4
+              style="font-size: var(--text-base); margin-bottom: var(--space-1)"
+            >
+              Pay & Go Live
+            </h4>
+            <p style="font-size: var(--text-sm); margin: 0">
+              Complete a one-time registration fee through Razorpay and your
+              profile goes live instantly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA SECTION ═══════════════════════════ -->
+<section class="section" id="cta">
+  <div class="container" style="text-align: center">
+    <div
+      class="neu-card reveal"
+      style="padding: var(--space-16); max-width: 800px; margin: 0 auto"
+    >
+      <h2 style="margin-bottom: var(--space-4)">
+        Ready to <span class="text-gradient">Get Started?</span>
+      </h2>
+      <p
+        style="
+          font-size: var(--text-lg);
+          max-width: 500px;
+          margin: 0 auto var(--space-10);
+        "
+      >
+        Join thousands of students and tutors already on Tuition Connect. It's
+        free to browse!
+      </p>
+      <div class="hero-actions" style="justify-content: center">
+        <a
+          href="{% url 'tutors:directory' %}"
+          class="neu-btn neu-btn-primary neu-btn-lg"
+          id="cta-find"
+        >
+          <i data-lucide="search" style="width: 20px; height: 20px"></i>
+          <span>Browse Tutors</span>
+        </a>
+        <a
+          href="{% url 'accounts:register' %}"
+          class="neu-btn neu-btn-outline neu-btn-lg"
+          id="cta-register"
+        >
+          <i data-lucide="arrow-right" style="width: 20px; height: 20px"></i>
+          <span>Join Now</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
