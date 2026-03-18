@@ -15,16 +15,6 @@
     </button>
 
     <div class="nav-links" id="nav-links">
-      <button
-        class="theme-switcher-wrapper"
-        id="theme-toggle"
-        aria-label="Toggle dark mode"
-      >
-        <div class="theme-switch-track">
-          <div class="theme-switch-thumb"></div>
-        </div>
-      </button>
-
       {% if user.is_authenticated %} {% if user.is_tutor %}
       <a href="{% url 'accounts:profile' %}" class="nav-link" id="nav-profile">
         <i data-lucide="user" style="width: 16px; height: 16px"></i>

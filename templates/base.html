@@ -38,18 +38,6 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link rel="stylesheet" href="{% static 'css/components.css' %}" />
     {% block extra_css %}{% endblock %}
-
-    <!-- Theme Initialization Script -->
-    <script>
-      const savedTheme = localStorage.getItem("theme");
-      if (
-        savedTheme === "dark" ||
-        (!savedTheme &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
-    </script>
   </head>
   <body>
     <!-- Neumorphic Preloader -->

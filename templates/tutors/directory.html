@@ -64,10 +64,10 @@
                         <label><i data-lucide="indian-rupee" style="width:12px;height:12px;display:inline"></i> Price Range</label>
                         <select name="price_range" id="filter-price-range">
                             <option value="">Any Price</option>
-                            <option value="300-600" {% if request.GET.price_range == '300-600' %}selected{% endif %}>₹300-600/hour</option>
-                            <option value="600-1000" {% if request.GET.price_range == '600-1000' %}selected{% endif %}>₹600-1000/hour</option>
-                            <option value="1000-1500" {% if request.GET.price_range == '1000-1500' %}selected{% endif %}>₹1000-1500/hour</option>
-                            <option value="1500+" {% if request.GET.price_range == '1500+' %}selected{% endif %}>₹1500+/hour</option>
+                            <option value="300-600" {% if request.GET.price_range == '300-600' %}selected{% endif %}>₹300-600/month</option>
+                            <option value="600-1000" {% if request.GET.price_range == '600-1000' %}selected{% endif %}>₹600-1000/month</option>
+                            <option value="1000-1500" {% if request.GET.price_range == '1000-1500' %}selected{% endif %}>₹1000-1500/month</option>
+                            <option value="1500+" {% if request.GET.price_range == '1500+' %}selected{% endif %}>₹1500+/month</option>
                         </select>
                     </div>
 
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Tutor Grid -->
-        <div class="tutor-grid stagger-children" id="tutor-grid">
+        <div class="tutor-grid" id="tutor-grid">
             {% for tutor in page_obj %}
             <div class="tutor-card" id="tutor-{{ tutor.pk }}">
                 <div class="tutor-card-header">
@@ -140,7 +140,7 @@
 
                 <div class="tutor-card-footer">
                     <span class="tutor-card-price">
-                        ₹{{ tutor.price_per_hour|floatformat:0 }}<small>/hr</small>
+                        ₹{{ tutor.price_per_hour|floatformat:0 }}<small>/month</small>
                     </span>
                     <a href="{% url 'tutors:detail' tutor.pk %}" class="neu-btn neu-btn-sm neu-btn-primary" id="view-tutor-{{ tutor.pk }}">
                         <span>View Profile</span>

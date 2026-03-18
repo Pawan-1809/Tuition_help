@@ -1,171 +1,384 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block title %}My Profile |
+Tuition Connect{% endblock %} {% block content %}
+<div class="section" style="padding-top: 100px">
+  <div class="container" style="max-width: 900px">
+    <!-- Profile Header Actions -->
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--space-6);
+        flex-wrap: wrap;
+        gap: var(--space-4);
+      "
+    >
+      <h1 style="font-size: var(--text-3xl); margin: 0">
+        My <span class="text-gradient">Profile Dashboard</span>
+      </h1>
 
-{% block title %}My Profile | Tuition Connect{% endblock %}
+      <div style="display: flex; gap: var(--space-4)">
+        <a
+          href="{% url 'chat:inbox' %}"
+          class="neu-btn neu-btn-outline"
+          style="background: var(--bg-card)"
+        >
+          <i data-lucide="message-square" style="width: 18px; height: 18px"></i>
+          <span>Inbox</span>
+        </a>
 
-{% block content %}
-<div class="section" style="padding-top: 100px;">
-    <div class="container" style="max-width: 900px;">
-                
-        <!-- Profile Header Actions -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4);">
-            <h1 style="font-size: var(--text-3xl); margin: 0;">My <span class="text-gradient">Profile Dashboard</span></h1>
-            
-            <div style="display: flex; gap: var(--space-4);">
-                <a href="{% url 'chat:inbox' %}" class="neu-btn neu-btn-outline" style="background: var(--bg-card);">
-                    <i data-lucide="message-square" style="width:18px;height:18px"></i>
-                    <span>Inbox</span>
-                </a>
-                
-                {% if profile.is_published %}
-                <span class="neu-badge neu-badge-success" style="padding: 0 var(--space-4); font-size: var(--text-sm);">
-                    <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Live / Published
-                </span>
-                {% else %}
-                <span class="neu-badge neu-badge-warning" style="padding: 0 var(--space-4); font-size: var(--text-sm);">
-                    <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i> Draft Mode
-                </span>
-                {% endif %}
+        {% if profile.is_published %}
+        <span
+          class="neu-badge neu-badge-success"
+          style="padding: 0 var(--space-4); font-size: var(--text-sm)"
+        >
+          <i data-lucide="check-circle" style="width: 14px; height: 14px"></i>
+          Live / Published
+        </span>
+        {% else %}
+        <span
+          class="neu-badge neu-badge-warning"
+          style="padding: 0 var(--space-4); font-size: var(--text-sm)"
+        >
+          <i data-lucide="alert-circle" style="width: 14px; height: 14px"></i>
+          Draft Mode
+        </span>
+        {% endif %}
 
-                <form method="post" action="{% url 'accounts:delete_account' %}" onsubmit="return confirm('Are you sure you want to delete your account completely? This action cannot be undone.');">
-                    {% csrf_token %}
-                    <button type="submit" class="neu-btn neu-btn-outline" style="border-color: var(--danger); color: var(--danger);">
-                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i> Delete Account
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Main Profile Card -->
-        <div class="neu-card reveal" style="padding: var(--space-12);">
-            
-            <!-- Avatar & Basic Info -->
-            <div style="display: flex; gap: var(--space-8); align-items: start; flex-wrap: wrap; margin-bottom: var(--space-8);">
-                <div class="tutor-card-avatar neu-avatar-xl" style="font-size: var(--text-4xl);">
-                    {% if profile.profile_photo %}
-                        <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.full_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
-                    {% else %}
-                        {{ profile.user.full_name|first|upper }}
-                    {% endif %}
-                </div>
-                
-                <div style="flex: 1; min-width: 250px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-2);">
-                        <div style="display: flex; align-items: center; gap: var(--space-3);">
-                            <h2 style="font-size: var(--text-2xl); margin: 0;">{{ profile.user.full_name }}</h2>
-                            {% if profile.is_verified %}
-                            <span class="neu-badge neu-badge-success"><i data-lucide="shield-check" style="width:12px;height:12px"></i> Verified</span>
-                            {% endif %}
-                        </div>
-                        <a href="{% url 'accounts:onboarding' step=1 %}" class="neu-btn neu-btn-sm" title="Edit Personal Info">
-                            <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i> Edit Basic Info
-                        </a>
-                    </div>
-
-                    <p style="color: var(--text-muted); margin-bottom: var(--space-4);">
-                        <i data-lucide="phone" style="width:16px;height:16px;display:inline"></i> {{ profile.user.phone_number }}
-                        {% if profile.whatsapp_number %} | <i data-lucide="message-circle" style="width:16px;height:16px;display:inline"></i> {{ profile.whatsapp_number }}{% endif %}
-                        <br>
-                        <i data-lucide="mail" style="width:16px;height:16px;display:inline"></i> {{ profile.user.email }}
-                    </p>
-
-                    <p style="font-size: var(--text-lg); color: var(--text-dark); margin-bottom: var(--space-4);">
-                        {% if profile.teaching_method == 'online' %}
-                            <i data-lucide="monitor" style="width:16px;height:16px;display:inline"></i> Online Tutoring
-                        {% elif profile.teaching_method == 'offline' %}
-                            <i data-lucide="map-pin" style="width:16px;height:16px;display:inline"></i> In-Person Tutoring
-                        {% else %}
-                            <i data-lucide="repeat" style="width:16px;height:16px;display:inline"></i> Online & In-Person
-                        {% endif %}
-                        {% if profile.experience_years %}
-                         · {{ profile.experience_years }} years experience
-                        {% endif %}
-                    </p>
-
-                    <div class="tutor-card-price" style="font-size: var(--text-3xl); margin-bottom: 0;">
-                        ₹{{ profile.price_per_hour|floatformat:0|default:"--" }}<small>/hr</small>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Meta Data (Subjects, Languages, Location) -->
-            <div class="neu-divider"></div>
-            <div style="display: flex; flex-direction: column; gap: var(--space-6);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: var(--text-lg); margin: 0;">Teaching Preferences</h3>
-                    <a href="{% url 'accounts:onboarding' step=3 %}" class="neu-btn neu-btn-sm" title="Edit subjects & languages">
-                        <i data-lucide="edit-3" style="width:16px;height:16px"></i> Edit
-                    </a>
-                </div>
-                
-                <div>
-                    <h4 style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">SUBJECTS</h4>
-                    <div class="tutor-card-meta">
-                        {% for subject in profile.subjects.all %}
-                        <span class="tutor-card-tag">{{ subject.name }}</span>
-                        {% empty %}
-                        <span class="tutor-card-tag" style="background: var(--bg-primary); border: 1px dashed var(--text-muted); color: var(--text-muted);">No subjects added</span>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div>
-                    <h4 style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">LANGUAGES</h4>
-                    <div class="tutor-card-meta">
-                        {% for lang in profile.languages.all %}
-                        <span class="tutor-card-tag">{{ lang.name }}</span>
-                        {% empty %}
-                        <span class="tutor-card-tag" style="background: var(--bg-primary); border: 1px dashed var(--text-muted); color: var(--text-muted);">No languages added</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">
-                        <i data-lucide="map-pin" style="width:14px;height:14px;display:inline"></i> ADDRESS
-                    </h4>
-                    <p style="margin: 0;">{{ profile.address|default:"Location not added." }}</p>
-                </div>
-            </div>
-
-            <!-- About & Qualifications -->
-            <div class="neu-divider"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
-                <h3 style="font-size: var(--text-lg); margin: 0;">About & Experience</h3>
-                <a href="{% url 'accounts:onboarding' step=2 %}" class="neu-btn neu-btn-sm" title="Edit Experience">
-                    <i data-lucide="edit-3" style="width:16px;height:16px"></i> Edit
-                </a>
-            </div>
-
-            <div style="margin-bottom: var(--space-6);">
-                <h4 style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">BIO</h4>
-                <p style="line-height: 1.8;">{{ profile.bio|default:"No bio written yet." }}</p>
-            </div>
-
-            <div>
-                <h4 style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">
-                    <i data-lucide="award" style="width:14px;height:14px;display:inline"></i> QUALIFICATIONS
-                </h4>
-                <p style="line-height: 1.8;">{{ profile.qualifications|default:"Share your background to stand out." }}</p>
-            </div>
-            
-            <!-- Pricing / Finalize -->
-            <div class="neu-divider"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2);">Payment & Discoverability</h3>
-                    {% if profile.payment_completed %}
-                    <p style="margin: 0; color: var(--success);"><i data-lucide="check-circle" style="width: 16px; height: 16px;"></i> Registration fee paid</p>
-                    {% else %}
-                    <p style="margin: 0; color: var(--warning-dark);"><i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i> Registration fee pending</p>
-                    {% endif %}
-                </div>
-                <a href="{% url 'accounts:onboarding' step=4 %}" class="neu-btn neu-btn-sm" title="Edit Pricing">
-                    <i data-lucide="edit-3" style="width:16px;height:16px"></i> Edit Pricing
-                </a>
-            </div>
-
-        </div>
+        <form
+          method="post"
+          action="{% url 'accounts:delete_account' %}"
+          onsubmit="
+            return confirm(
+              'Are you sure you want to delete your account completely? This action cannot be undone.',
+            );
+          "
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="neu-btn neu-btn-outline"
+            style="border-color: var(--danger); color: var(--danger)"
+          >
+            <i data-lucide="trash-2" style="width: 16px; height: 16px"></i>
+            Delete Account
+          </button>
+        </form>
+      </div>
     </div>
+
+    <!-- Main Profile Card -->
+    <div class="neu-card reveal" style="padding: var(--space-12)">
+      <!-- Avatar & Basic Info -->
+      <div
+        style="
+          display: flex;
+          gap: var(--space-8);
+          align-items: start;
+          flex-wrap: wrap;
+          margin-bottom: var(--space-8);
+        "
+      >
+        <div
+          class="tutor-card-avatar neu-avatar-xl"
+          style="font-size: var(--text-4xl)"
+        >
+          {% if profile.profile_photo %}
+          <img
+            src="{{ profile.profile_photo.url }}"
+            alt="{{ profile.user.full_name }}"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: inherit;
+            "
+          />
+          {% else %} {{ profile.user.full_name|first|upper }} {% endif %}
+        </div>
+
+        <div style="flex: 1; min-width: 250px">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: var(--space-3);
+              flex-wrap: wrap;
+              margin-bottom: var(--space-2);
+            "
+          >
+            <div
+              style="display: flex; align-items: center; gap: var(--space-3)"
+            >
+              <h2 style="font-size: var(--text-2xl); margin: 0">
+                {{ profile.user.full_name }}
+              </h2>
+              {% if profile.is_verified %}
+              <span class="neu-badge neu-badge-success"
+                ><i
+                  data-lucide="shield-check"
+                  style="width: 12px; height: 12px"
+                ></i>
+                Verified</span
+              >
+              {% endif %}
+            </div>
+            <a
+              href="{% url 'accounts:onboarding' step=1 %}"
+              class="neu-btn neu-btn-sm"
+              title="Edit Personal Info"
+            >
+              <i data-lucide="edit-3" style="width: 16px; height: 16px"></i>
+              Edit Basic Info
+            </a>
+          </div>
+
+          <p style="color: var(--text-muted); margin-bottom: var(--space-4)">
+            <i
+              data-lucide="phone"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            {{ profile.user.phone_number }} {% if profile.whatsapp_number %} |
+            <i
+              data-lucide="message-circle"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            {{ profile.whatsapp_number }}{% endif %}
+            <br />
+            <i
+              data-lucide="mail"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            {{ profile.user.email }}
+          </p>
+
+          <p
+            style="
+              font-size: var(--text-lg);
+              color: var(--text-dark);
+              margin-bottom: var(--space-4);
+            "
+          >
+            {% if profile.teaching_method == 'online' %}
+            <i
+              data-lucide="monitor"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            Online Tutoring {% elif profile.teaching_method == 'offline' %}
+            <i
+              data-lucide="map-pin"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            In-Person Tutoring {% else %}
+            <i
+              data-lucide="repeat"
+              style="width: 16px; height: 16px; display: inline"
+            ></i>
+            Online & In-Person {% endif %} {% if profile.experience_years %} ·
+            {{ profile.experience_years }} years experience {% endif %}
+          </p>
+
+          <div
+            class="tutor-card-price"
+            style="font-size: var(--text-3xl); margin-bottom: 0"
+          >
+            ₹{{ profile.price_per_hour|floatformat:0|default:"--" }}<small
+              >/month</small
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Meta Data (Subjects, Languages, Location) -->
+      <div class="neu-divider"></div>
+      <div style="display: flex; flex-direction: column; gap: var(--space-6)">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h3 style="font-size: var(--text-lg); margin: 0">
+            Teaching Preferences
+          </h3>
+          <a
+            href="{% url 'accounts:onboarding' step=3 %}"
+            class="neu-btn neu-btn-sm"
+            title="Edit subjects & languages"
+          >
+            <i data-lucide="edit-3" style="width: 16px; height: 16px"></i> Edit
+          </a>
+        </div>
+
+        <div>
+          <h4
+            style="
+              font-size: var(--text-sm);
+              color: var(--text-muted);
+              margin-bottom: var(--space-2);
+            "
+          >
+            SUBJECTS
+          </h4>
+          <div class="tutor-card-meta">
+            {% for subject in profile.subjects.all %}
+            <span class="tutor-card-tag">{{ subject.name }}</span>
+            {% empty %}
+            <span
+              class="tutor-card-tag"
+              style="
+                background: var(--bg-primary);
+                border: 1px dashed var(--text-muted);
+                color: var(--text-muted);
+              "
+              >No subjects added</span
+            >
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <h4
+            style="
+              font-size: var(--text-sm);
+              color: var(--text-muted);
+              margin-bottom: var(--space-2);
+            "
+          >
+            LANGUAGES
+          </h4>
+          <div class="tutor-card-meta">
+            {% for lang in profile.languages.all %}
+            <span class="tutor-card-tag">{{ lang.name }}</span>
+            {% empty %}
+            <span
+              class="tutor-card-tag"
+              style="
+                background: var(--bg-primary);
+                border: 1px dashed var(--text-muted);
+                color: var(--text-muted);
+              "
+              >No languages added</span
+            >
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <h4
+            style="
+              font-size: var(--text-sm);
+              color: var(--text-muted);
+              margin-bottom: var(--space-2);
+            "
+          >
+            <i
+              data-lucide="map-pin"
+              style="width: 14px; height: 14px; display: inline"
+            ></i>
+            ADDRESS
+          </h4>
+          <p style="margin: 0">
+            {{ profile.address|default:"Location not added." }}
+          </p>
+        </div>
+      </div>
+
+      <!-- About & Qualifications -->
+      <div class="neu-divider"></div>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: var(--space-6);
+        "
+      >
+        <h3 style="font-size: var(--text-lg); margin: 0">About & Experience</h3>
+        <a
+          href="{% url 'accounts:onboarding' step=2 %}"
+          class="neu-btn neu-btn-sm"
+          title="Edit Experience"
+        >
+          <i data-lucide="edit-3" style="width: 16px; height: 16px"></i> Edit
+        </a>
+      </div>
+
+      <div style="margin-bottom: var(--space-6)">
+        <h4
+          style="
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+          "
+        >
+          BIO
+        </h4>
+        <p style="line-height: 1.8">
+          {{ profile.bio|default:"No bio written yet." }}
+        </p>
+      </div>
+
+      <div>
+        <h4
+          style="
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+          "
+        >
+          <i
+            data-lucide="award"
+            style="width: 14px; height: 14px; display: inline"
+          ></i>
+          QUALIFICATIONS
+        </h4>
+        <p style="line-height: 1.8">
+          {{ profile.qualifications|default:"Share your background to stand
+          out." }}
+        </p>
+      </div>
+
+      <!-- Pricing / Finalize -->
+      <div class="neu-divider"></div>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div>
+          <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-2)">
+            Payment & Discoverability
+          </h3>
+          {% if profile.payment_completed %}
+          <p style="margin: 0; color: var(--success)">
+            <i data-lucide="check-circle" style="width: 16px; height: 16px"></i>
+            Registration fee paid
+          </p>
+          {% else %}
+          <p style="margin: 0; color: var(--warning-dark)">
+            <i
+              data-lucide="alert-triangle"
+              style="width: 16px; height: 16px"
+            ></i>
+            Registration fee pending
+          </p>
+          {% endif %}
+        </div>
+        <a
+          href="{% url 'accounts:onboarding' step=4 %}"
+          class="neu-btn neu-btn-sm"
+          title="Edit Pricing"
+        >
+          <i data-lucide="edit-3" style="width: 16px; height: 16px"></i> Edit
+          Pricing
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

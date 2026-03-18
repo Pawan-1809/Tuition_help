@@ -25,29 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             width: '100%'
         });
     }
-
-    // ── Dark Mode Toggle ───────────────────────
-    const themeToggle = document.getElementById('theme-toggle');
-    
-    function applyTheme(theme) {
-        if (theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-        }
-    }
-
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-    }
-
-    // ── Lenis Smooth Scrolling ─────────────────
     let lenis;
     try {
         lenis = new Lenis({

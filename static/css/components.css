@@ -1366,92 +1366,22 @@
  
  * / 
  
- / *  
- T h e m e  
- T o g g l e  
- * /  
- / *  
- F l o a t i n g  
- B a c k  
- B u t t o n  
- * /  
+ / * 
  
-/* New Theme Toggle Styles (Neumorphic) */
-.theme-switcher-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    outline: none;
-}
-
-.theme-label {
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: 0.5px;
-    color: #a0a6b1;
-    text-align: center;
-    transition: color 0.4s ease;
-}
-
-/* Light Mode specific element styles */
-.theme-switch-track {
-    width: 68px;
-    height: 34px;
-    background: #f0f3f8;
-    border-radius: 34px;
-    position: relative;
-    box-shadow: inset 4px 4px 8px #d1d9e6, 
-                inset -4px -4px 8px #ffffff;
-    transition: all 0.4s ease;
-    display: flex;
-    align-items: center;
-}
-
-.theme-switch-thumb {
-    width: 26px;
-    height: 26px;
-    background: #f4f7fb;
-    border-radius: 50%;
-    position: absolute;
-    left: 4px;
-    box-shadow: 2px 2px 5px #d1d9e6, 
-                -2px -2px 5px #ffffff;
-    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), background 0.4s ease, box-shadow 0.4s ease;
-}
-
-/* Base Light Mode active states */
-html:not([data-theme="dark"]) .light-label {
-    color: #6a7282;
-}
-html:not([data-theme="dark"]) .dark-label {
-    opacity: 0.5;
-}
-
-/* Dark Mode States */
-[data-theme="dark"] .theme-switch-track {
-    background: #2d3342;
-    box-shadow: inset 4px 4px 8px #222733, 
-                inset -4px -4px 8px #384051;
-}
-
-[data-theme="dark"] .theme-switch-thumb {
-    transform: translateX(34px);
-    background: #394050;
-    box-shadow: 2px 2px 5px #222733, 
-                -2px -2px 5px #384051;
-}
-
-[data-theme="dark"] .theme-label {
-    color: #555e70;
-}
-
-[data-theme="dark"] .dark-label {
-    color: #9ba4b5;
-    opacity: 1;
-}
+ T h e m e 
+ 
+ T o g g l e 
+ 
+ * / 
+ 
+ / * 
+ 
+ F l o a t i n g 
+ 
+ B a c k 
+ 
+ B u t t o n 
+ 
+ * / 
+ 
+ 

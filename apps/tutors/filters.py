@@ -14,10 +14,10 @@ class TutorDirectoryFilter(django_filters.FilterSet):
     """Advanced filter for the tutor directory."""
 
     PRICE_RANGE_CHOICES = (
-        ('300-600', '₹300-600/hour'),
-        ('600-1000', '₹600-1000/hour'),
-        ('1000-1500', '₹1000-1500/hour'),
-        ('1500+', '₹1500+/hour'),
+        ('300-600', '₹300-600/month'),
+        ('600-1000', '₹600-1000/month'),
+        ('1000-1500', '₹1000-1500/month'),
+        ('1500+', '₹1500+/month'),
     )
 
     price_range = django_filters.ChoiceFilter(

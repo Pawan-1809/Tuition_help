@@ -221,7 +221,7 @@ class TutorStep4Form(forms.ModelForm):
         widgets = {
             'price_per_hour': forms.NumberInput(attrs={
                 **NEUMORPHIC_INPUT,
-                'placeholder': 'Price per hour in ₹',
+                'placeholder': 'Price per month in ₹',
                 'min': '100',
                 'step': '50',
             }),

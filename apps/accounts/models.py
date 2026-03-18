@@ -141,7 +141,7 @@ class TutorProfile(models.Model):
     )
 
     price_per_hour = models.DecimalField(
-        'price per hour (₹)', max_digits=8,
+        'price per month (₹)', max_digits=8,
         decimal_places=2, null=True, blank=True
     )
 

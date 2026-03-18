@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="tutor-card-price" style="font-size: var(--text-4xl); margin-bottom: var(--space-6); font-weight: 900; color: var(--text-primary); text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        ₹{{ tutor.price_per_hour|floatformat:0 }}<span style="font-size: var(--text-lg); color: var(--text-muted); font-weight: 500;">/hour</span>
+                        ₹{{ tutor.price_per_hour|floatformat:0 }}<span style="font-size: var(--text-lg); color: var(--text-muted); font-weight: 500;">/month</span>
                     </div>
 
                     <!-- Connect Actions -->
@@ -225,7 +225,7 @@
         {% if related_tutors %}
         <div style="margin-top: var(--space-12);">
             <h2 style="margin-bottom: var(--space-8);" class="reveal">Similar <span class="text-gradient">Tutors</span></h2>
-            <div class="tutor-grid stagger-children">
+            <div class="tutor-grid">
                 {% for rt in related_tutors %}
                 <div class="tutor-card">
                     <div class="tutor-card-header">
@@ -235,7 +235,7 @@
                         </div>
                     </div>
                     <div class="tutor-card-footer">
-                        <span class="tutor-card-price">₹{{ rt.price_per_hour|floatformat:0 }}<small>/hr</small></span>
+                        <span class="tutor-card-price">₹{{ rt.price_per_hour|floatformat:0 }}<small>/month</small></span>
                         <a href="{% url 'tutors:detail' rt.pk %}" class="neu-btn neu-btn-sm neu-btn-primary">
                             <span>View</span>
                         </a>
