@@ -1,0 +1,32 @@
+# ── Core ────────────────────────────────────
+Django>=5.1,<5.2
+gunicorn>=22.0
+
+# ── Database ────────────────────────────────
+psycopg2-binary>=2.9
+
+# ── Authentication ──────────────────────────
+django-allauth[socialaccount]>=65.0
+
+# ── Media & Files ───────────────────────────
+Pillow>=10.4
+whitenoise>=6.7
+
+# ── Filtering & Search ─────────────────────
+django-filter>=24.3
+
+# ── Payment Gateway ────────────────────────
+razorpay>=1.4
+
+# ── Caching & Sessions ─────────────────────
+django-redis>=5.4
+redis>=5.0
+
+# ── Environment Variables ──────────────────
+python-dotenv>=1.0
+
+# ── CORS ────────────────────────────────────
+django-cors-headers>=4.4
+
+# ── Utilities ───────────────────────────────
+django-extensions>=3.2
