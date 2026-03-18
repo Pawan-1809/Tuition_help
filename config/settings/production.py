@@ -9,6 +9,9 @@ from .base import *  # noqa: F401, F403
 
 DEBUG = False
 
+# Temporary demo override: disable payment requirement for tutor publishing.
+DEMO_BYPASS_PAYMENT = True
+
 ALLOWED_HOSTS = [
     host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if host.strip()
 ]
