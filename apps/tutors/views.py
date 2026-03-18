@@ -25,40 +25,48 @@ def directory_view(request):
     Main tutor directory with filtering, sorting, and pagination.
     Only shows published and verified tutors.
     """
-    queryset = TutorProfile.objects.filter(
-        is_published=True,
-    ).select_related('user').prefetch_related('subjects', 'languages')
+    try:
+        queryset = TutorProfile.objects.filter(
+            is_published=True,
+        ).select_related('user').prefetch_related('subjects', 'languages')
 
-    tutor_filter = TutorDirectoryFilter(request.GET, queryset=queryset)
-    filtered_qs = tutor_filter.qs
+        tutor_filter = TutorDirectoryFilter(request.GET, queryset=queryset)
+        filtered_qs = tutor_filter.qs
 
-    user_lat = request.GET.get('lat')
-    user_lng = request.GET.get('lng')
-    max_distance = request.GET.get('distance')  # in km
+        user_lat = request.GET.get('lat')
+        user_lng = request.GET.get('lng')
+        max_distance = request.GET.get('distance')  # in km
 
-    if user_lat and user_lng and max_distance:
-        try:
-            user_lat = float(user_lat)
-            user_lng = float(user_lng)
-            max_distance = float(max_distance)
-            filtered_qs = _filter_by_distance(filtered_qs, user_lat, user_lng, max_distance)
-        except (ValueError, TypeError):
-            pass
+        if user_lat and user_lng and max_distance:
+            try:
+                user_lat = float(user_lat)
+                user_lng = float(user_lng)
+                max_distance = float(max_distance)
+                filtered_qs = _filter_by_distance(filtered_qs, user_lat, user_lng, max_distance)
+            except (ValueError, TypeError):
+                pass
 
-    paginator = Paginator(filtered_qs, 12)  # 12 tutors per page
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(filtered_qs, 12)  # 12 tutors per page
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
 
-    subjects = Subject.objects.filter(is_active=True)
-    languages = Language.objects.all()
+        subjects = Subject.objects.filter(is_active=True)
+        languages = Language.objects.all()
+        total_results = filtered_qs.count()
+    except Exception:
+        page_obj = None
+        tutor_filter = None
+        subjects = []
+        languages = []
+        total_results = 0
 
     context = {
         'page_obj': page_obj,
         'tutor_filter': tutor_filter,
         'subjects': subjects,
         'languages': languages,
-        'total_results': filtered_qs.count(),
-        'teaching_methods': TutorProfile.TeachingMethod.choices,
+        'total_results': total_results,
+        'teaching_methods': TutorProfile.TeachingMethod.choices if hasattr(TutorProfile, 'TeachingMethod') else [],
     }
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
