@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Inbox | Tuition Connect{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; padding-top: 100px; padding-bottom: var(--space-12);">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);" class="reveal">
+        <h2 class="section-title" style="margin: 0;">Messages</h2>
+        <a href="{% url 'accounts:profile' %}" class="neu-btn neu-btn-outline">
+            <i data-lucide="arrow-left" style="width:16px;height:16px"></i>
+            <span>Back to Profile</span>
+        </a>
+    </div>
+
+    <div class="stagger-children">
+        {% for thread in threads %}
+            {% with last_message=thread.messages.last %}
+            <a href="{% url 'chat:room' thread.id %}" style="text-decoration: none; color: inherit; display: block; margin-bottom: var(--space-4);">
+                <div class="tutor-card" style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-6); transition: all 0.3s ease;">
+                    <div style="display: flex; align-items: center; gap: var(--space-4);">
+                        <div class="avatar-placeholder" style="width: 56px; height: 56px; border-radius: 50%; background: var(--bg-darker); box-shadow: var(--neu-inset); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                            <i data-lucide="users" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <div>
+                            <!-- Show names of ALL OTHER participants -->
+                            <h4 style="margin: 0; font-size: var(--text-lg); font-weight: 600;">
+                                {% for part in thread.participants.all %}
+                                    {% if part != request.user %}
+                                        {{ part.full_name }}
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </h4>
+                            <p style="margin: 0; font-size: var(--text-sm); color: var(--text-muted); margin-top: 4px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {% if last_message %}
+                                    {% if last_message.sender == request.user %}You: {% endif %}
+                                    {{ last_message.text }}
+                                {% else %}
+                                    No messages yet.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2);">
+                        {% if last_message %}
+                            <span style="font-size: var(--text-sm); color: var(--text-muted);">{{ last_message.created_at|date:"M d, h:i A" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            {% endwith %}
+        {% empty %}
+            <div class="tutor-card" style="text-align: center; padding: var(--space-12) var(--space-6);">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--bg-darker); box-shadow: var(--neu-inset); color: var(--text-muted); margin-bottom: var(--space-4);">
+                    <i data-lucide="inbox" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h3 style="margin-top: 0; margin-bottom: var(--space-2); font-size: var(--text-xl);">No Messages Yet</h3>
+                <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto;">You don't have any active conversations. Start browsing tutors and connect with them!</p>
+                <div style="margin-top: var(--space-6);">
+                    <a href="{% url 'tutors:directory' %}" class="neu-btn neu-btn-primary">Find Tutors</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

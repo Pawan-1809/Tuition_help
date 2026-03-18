@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Complete Payment{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+    <div class="checkout-card">
+        <div class="checkout-icon">
+            <i data-lucide="credit-card"></i>
+        </div>
+
+        <h2>Complete Your <span class="text-gradient">Registration</span></h2>
+        <p style="color: var(--text-muted);">One-time registration fee to publish your tutor profile</p>
+
+        <div class="checkout-amount">₹{{ amount }}</div>
+
+        <div class="checkout-details">
+            <div class="checkout-detail-row">
+                <span style="color: var(--text-muted);">Registration Fee</span>
+                <span>₹{{ amount }}</span>
+            </div>
+            <div class="checkout-detail-row">
+                <span style="color: var(--text-muted);">GST</span>
+                <span>Included</span>
+            </div>
+            <div class="checkout-detail-row">
+                <span>Total</span>
+                <span class="text-gradient" style="font-size: var(--text-lg);">₹{{ amount }}</span>
+            </div>
+        </div>
+
+        {% if dev_mode %}
+        <!-- Dev mode: Skip payment -->
+        <form method="post" action="{% url 'payments:verify' %}" id="dev-pay-form">
+            {% csrf_token %}
+            <button type="button" class="neu-btn neu-btn-primary neu-btn-lg" style="width: 100%;" id="pay-btn" onclick="devPayment()">
+                <i data-lucide="zap" style="width:20px;height:20px"></i>
+                <span>Pay ₹{{ amount }} (Dev Mode)</span>
+            </button>
+        </form>
+        {% else %}
+        <button type="button" class="neu-btn neu-btn-primary neu-btn-lg" style="width: 100%;" id="pay-btn" onclick="startPayment()">
+            <i data-lucide="lock" style="width:20px;height:20px"></i>
+            <span>Pay ₹{{ amount }} Securely</span>
+        </button>
+        {% endif %}
+
+        <p style="margin-top: var(--space-6); font-size: var(--text-xs); color: var(--text-muted); text-align: center;">
+            <i data-lucide="shield-check" style="width:12px;height:12px;display:inline"></i>
+            Secured by Razorpay. 100% safe & encrypted.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if not dev_mode %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{% endif %}
+<script>
+{% if dev_mode %}
+function devPayment() {
+    fetch('{% url "payments:verify" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            razorpay_order_id: '{{ order_id }}',
+            razorpay_payment_id: 'dev_pay_{{ user.pk }}',
+            razorpay_signature: 'dev_sig_{{ user.pk }}'
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '{% url "payments:success" %}';
+        } else {
+            alert('Payment failed: ' + data.error);
+        }
+    });
+}
+{% else %}
+function startPayment() {
+    const options = {
+        key: '{{ razorpay_key_id }}',
+        amount: {{ amount }} * 100,
+        currency: 'INR',
+        name: 'Tuition Connect',
+        description: 'Tutor Registration Fee',
+        order_id: '{{ order_id }}',
+        handler: function(response) {
+            fetch('{% url "payments:verify" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(response)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '{% url "payments:success" %}';
+                } else {
+                    alert('Verification failed: ' + data.error);
+                }
+            });
+        },
+        prefill: {
+            name: '{{ user.full_name }}',
+            email: '{{ user.email|default:"" }}',
+            contact: '{{ user.phone_number|default:"" }}'
+        },
+        theme: { color: '#6c5ce7' }
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
+}
+{% endif %}
+</script>
+{% endblock %}

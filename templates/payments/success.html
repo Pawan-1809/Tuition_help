@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Successful!{% endblock %}
+
+{% block content %}
+<div class="success-page">
+    <div class="success-card">
+        <div class="success-icon">
+            <i data-lucide="check"></i>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-4);">Payment <span class="text-gradient">Successful!</span></h2>
+        <p style="color: var(--text-secondary); font-size: var(--text-lg); margin-bottom: var(--space-8);">
+            🎉 Your tutor profile is now live on Tuition Connect!
+        </p>
+
+        <div class="neu-card-flat" style="text-align: left; margin-bottom: var(--space-8); padding: var(--space-6);">
+            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
+                <i data-lucide="check-circle" style="width:18px;height:18px;color:var(--success)"></i>
+                <span>Profile published to the tutor directory</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
+                <i data-lucide="check-circle" style="width:18px;height:18px;color:var(--success)"></i>
+                <span>Visible to all parents and students</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                <i data-lucide="check-circle" style="width:18px;height:18px;color:var(--success)"></i>
+                <span>Ready to receive student inquiries</span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'accounts:profile' %}" class="neu-btn neu-btn-primary neu-btn-lg" id="success-profile">
+                <i data-lucide="user" style="width:18px;height:18px"></i>
+                <span>View My Profile</span>
+            </a>
+            <a href="{% url 'tutors:directory' %}" class="neu-btn neu-btn-lg" id="success-directory">
+                <i data-lucide="search" style="width:18px;height:18px"></i>
+                <span>Browse Directory</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

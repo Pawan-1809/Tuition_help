@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ other_user.full_name }} | Tuition Connect{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; padding-top: 100px; padding-bottom: var(--space-8); height: calc(100vh - 20px);">
+    <div class="tutor-card reveal" style="display: flex; flex-direction: column; height: 100%;">
+        <!-- Header -->
+        <div style="border-bottom: 2px solid var(--bg-darker); padding-bottom: var(--space-4); margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                <div class="tutor-avatar" style="width: 48px; height: 48px; min-width: 48px;">
+                    {% if other_user.avatar_url %}
+                        <img src="{{ other_user.avatar_url }}" alt="{{ other_user.full_name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% elif other_user.tutor_profile.profile_photo %}
+                        <img src="{{ other_user.tutor_profile.profile_photo.url }}" alt="{{ other_user.full_name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                        <div style="width: 100%; height: 100%; background: var(--accent-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <span>{{ other_user.full_name|make_list|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h3 style="margin: 0; font-size: var(--text-lg); font-weight: 600;">{{ other_user.full_name }}</h3>
+                    <p style="margin: 0; font-size: var(--text-sm); color: var(--text-muted);">
+                        {% if other_user.is_tutor %}Tutor{% else %}Parent/Student{% endif %}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <a href="{% url 'chat:inbox' %}" class="neu-btn neu-btn-outline" style="padding: var(--space-2) var(--space-4);' ">
+                    <i data-lucide="arrow-left" style="width:16px;height:16px"></i>
+                    <span>Inbox</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chat-messages" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-4); padding-right: var(--space-2); margin-bottom: var(--space-4);">
+            {% for msg in messages %}
+            <div style="display: flex; flex-direction: column; {% if msg.sender == request.user %}align-items: flex-end;{% else %}align-items: flex-start;{% endif %}">
+                <div style="max-width: 70%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); {% if msg.sender == request.user %}background: var(--accent-gradient); color: white; border-bottom-right-radius: 4px;{% else %}background: var(--bg-card); color: var(--text-primary); border-bottom-left-radius: 4px; box-shadow: var(--neu-shadow-sm);{% endif %}">
+                    {{ msg.text }}
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">{{ msg.created_at|date:"h:i A" }}</span>
+            </div>
+            {% empty %}
+            <div id="no-messages-alert" style="text-align: center; color: var(--text-muted); padding: var(--space-8); display: flex; flex-direction: column; align-items: center; gap: var(--space-3);">
+                <i data-lucide="message-square" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+                <p>No messages yet. Say hi to start the conversation!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Input Area -->
+        <div style="margin-top: auto; display: flex; gap: var(--space-3);">
+            <div style="flex: 1;">
+                <input type="text" id="chat-input" class="neu-input" placeholder="Type a message..." aria-label="Message text">
+            </div>
+            <button id="chat-submit" class="neu-btn neu-btn-primary" aria-label="Send Message" style="width: 48px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="send" style="width: 20px; height: 20px;"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const threadId = "{{ thread.id }}";
+    const currentUserId = "{{ request.user.id }}";
+    
+    // Auto-scroll to bottom of chat
+    const chatContainer = document.getElementById('chat-messages');
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    scrollToBottom();
+
+    // Setup websocket connection
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsUrl = wsScheme + '://' + window.location.host + '/ws/chat/' + threadId + '/';
+    console.log("Connecting to WebSocket at:", wsUrl);
+    
+    const chatSocket = new WebSocket(wsUrl);
+
+    chatSocket.onopen = function(e) {
+        console.log("WebSocket connection established!");
+    };
+    
+    chatSocket.onerror = function(e) {
+        console.error("WebSocket error observed:", e);
+    };
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        // Remove empty state if present
+        const alert = document.getElementById('no-messages-alert');
+        if (alert) alert.remove();
+
+        // Create new message element
+        const msgDiv = document.createElement('div');
+        const isMine = data.sender_id == currentUserId;
+        
+        msgDiv.style.display = 'flex';
+        msgDiv.style.flexDirection = 'column';
+        msgDiv.style.alignItems = isMine ? 'flex-end' : 'flex-start';
+        
+        let innerHtml = '';
+        if (isMine) {
+            innerHtml = `
+                <div style="max-width: 70%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); background: var(--accent-gradient); color: white; border-bottom-right-radius: 4px;">
+                    ${data.message}
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Just now</span>
+            `;
+        } else {
+            innerHtml = `
+                <div style="max-width: 70%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); background: var(--bg-card); color: var(--text-primary); border-bottom-left-radius: 4px; box-shadow: var(--neu-shadow-sm);">
+                    ${data.message}
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Just now</span>
+            `;
+        }
+        
+        msgDiv.innerHTML = innerHtml;
+        chatContainer.appendChild(msgDiv);
+        scrollToBottom();
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.getElementById('chat-input').focus();
+    document.getElementById('chat-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.getElementById('chat-submit').click();
+        }
+    };
+
+    document.getElementById('chat-submit').onclick = function(e) {
+        const messageInputDom = document.getElementById('chat-input');
+        const message = messageInputDom.value.trim();
+        
+        if (message) {
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    };
+</script>
+{% endblock %}

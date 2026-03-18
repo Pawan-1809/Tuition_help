@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page section" style="padding-top: 100px;">
+    <div class="container container-lg">
+        <!-- Header -->
+        <div class="dashboard-header reveal" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+            <div>
+                <h1><i data-lucide="shield" style="width:32px;height:32px;display:inline;color:var(--accent-primary)"></i> Admin <span class="text-gradient">Dashboard</span></h1>
+                <p style="color: var(--text-muted);">Manage platform users, tutors, and settings.</p>
+            </div>
+            
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="{% url 'dashboard:manage_users' role='student' %}" class="neu-btn neu-btn-primary">
+                    <i data-lucide="users" style="width:18px;height:18px;"></i> Manage Students
+                </a>
+                <a href="{% url 'dashboard:manage_users' role='tutor' %}" class="neu-btn neu-btn-outline">
+                    <i data-lucide="book-open" style="width:18px;height:18px;"></i> Manage Tutors
+                </a>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid stagger-children" style="margin-bottom: var(--space-8);">
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i data-lucide="users" style="width:24px;height:24px"></i>
+                </div>
+                <h3 data-count="{{ users.total_parents }}">{{ users.total_parents }}</h3>
+                <p>Total Students / Parents</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i data-lucide="book-open" style="width:24px;height:24px"></i>
+                </div>
+                <h3 data-count="{{ users.total_tutors }}">{{ users.total_tutors }}</h3>
+                <p>Total Tutors</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon" style="background: linear-gradient(135deg, #00cec9, #55efc4);">
+                    <i data-lucide="check-circle" style="width:24px;height:24px"></i>
+                </div>
+                <h3 data-count="{{ tutors.verified }}">{{ tutors.verified }}</h3>
+                <p>Verified Tutors</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon" style="background: linear-gradient(135deg, #a29bfe, #6c5ce7);">
+                    <i data-lucide="indian-rupee" style="width:24px;height:24px"></i>
+                </div>
+                <h3>₹{{ payments.total_revenue|floatformat:0 }}</h3>
+                <p>Total Revenue</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity Tables -->
+        <div class="grid grid-2 reveal" style="gap: var(--space-8);">
+            <div class="neu-card-flat">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                    <h3 style="margin: 0;"><i data-lucide="user-plus" style="width:18px;height:18px;display:inline;color:var(--accent-primary)"></i> Recent Registrations</h3>
+                    <a href="{% url 'dashboard:manage_users' role='student' %}" style="font-size: var(--text-sm); color: var(--accent-primary);">View All</a>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: var(--text-sm);">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--bg-secondary);">
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">Name</th>
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">Role</th>
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in recent_registrations %}
+                            <tr style="border-bottom: 1px solid var(--bg-secondary);">
+                                <td style="padding: var(--space-3); font-weight: 500;">
+                                    {{ user.full_name }}
+                                </td>
+                                <td style="padding: var(--space-3);">
+                                    <span class="neu-badge {% if user.role == 'tutor' %}neu-badge-primary{% elif user.role == 'admin' %}neu-badge-warning{% else %}neu-badge-success{% endif %}">
+                                        {{ user.get_role_display }}
+                                    </span>
+                                </td>
+                                <td style="padding: var(--space-3); color: var(--text-muted);">{{ user.date_joined|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" style="padding: var(--space-6); text-align: center; color: var(--text-muted);">No recent registrations</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="neu-card-flat">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                    <h3 style="margin: 0;"><i data-lucide="receipt" style="width:18px;height:18px;display:inline;color:var(--accent-primary)"></i> Recent Payments</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: var(--text-sm);">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--bg-secondary);">
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">User</th>
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">Amount</th>
+                                <th style="text-align: left; padding: var(--space-3); color: var(--text-muted); font-weight: 600;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in recent_payments %}
+                            <tr style="border-bottom: 1px solid var(--bg-secondary);">
+                                <td style="padding: var(--space-3); font-weight: 500;">{{ payment.user.full_name }}</td>
+                                <td style="padding: var(--space-3);">₹{{ payment.amount|floatformat:0 }}</td>
+                                <td style="padding: var(--space-3);">
+                                    <span class="neu-badge {% if payment.status == 'captured' %}neu-badge-success{% elif payment.status == 'failed' %}neu-badge-danger{% else %}neu-badge-warning{% endif %}">
+                                        {{ payment.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" style="padding: var(--space-6); text-align: center; color: var(--text-muted);">No payments yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

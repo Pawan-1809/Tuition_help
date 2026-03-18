@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage {{ role_display }} - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page section" style="padding-top: 100px; min-height: 80vh;">
+    <div class="container container-lg">
+        <!-- Header -->
+        <div class="dashboard-header reveal" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+            <div>
+                <a href="{% url 'dashboard:analytics' %}" style="display: flex; align-items: center; gap: var(--space-2); color: var(--text-muted); margin-bottom: var(--space-2);">
+                    <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Dashboard
+                </a>
+                <h1>Manage <span class="text-gradient">{{ role_display }}</span></h1>
+                <p style="color: var(--text-muted);">View, edit, and remove {{ role_display|lower }} in the system.</p>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="neu-card-flat reveal">
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: var(--text-base);">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--bg-secondary);">
+                            <th style="text-align: left; padding: var(--space-4); color: var(--text-muted); font-weight: 600;">Name</th>
+                            <th style="text-align: left; padding: var(--space-4); color: var(--text-muted); font-weight: 600;">Email</th>
+                            <th style="text-align: left; padding: var(--space-4); color: var(--text-muted); font-weight: 600;">Phone</th>
+                            <th style="text-align: left; padding: var(--space-4); color: var(--text-muted); font-weight: 600;">Joined</th>
+                            <th style="text-align: right; padding: var(--space-4); color: var(--text-muted); font-weight: 600;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr style="border-bottom: 1px solid var(--bg-secondary);">
+                            <td style="padding: var(--space-4); font-weight: 500;">
+                                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--accent-gradient); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                        {{ u.full_name|make_list|first|upper }}
+                                    </div>
+                                    {{ u.full_name }}
+                                </div>
+                            </td>
+                            <td style="padding: var(--space-4); color: var(--text-secondary);">{{ u.email|default:"N/A" }}</td>
+                            <td style="padding: var(--space-4); color: var(--text-secondary);">{{ u.phone_number|default:"N/A" }}</td>
+                            <td style="padding: var(--space-4); color: var(--text-muted);">{{ u.date_joined|date:"M d, Y" }}</td>
+                            <td style="padding: var(--space-4); text-align: right;">
+                                {% if u.role == 'tutor' %}
+                                <a href="{% url 'chat:chat_with_tutor' u.tutor_profile.id %}" class="neu-btn neu-btn-primary" style="padding: var(--space-2) var(--space-3); font-size: var(--text-sm); margin-right: var(--space-2); display: inline-block;">
+                                    <i data-lucide="message-square" style="width:16px;height:16px; display:inline"></i> Message
+                                </a>
+                                {% endif %}
+                                {% if not u.is_superuser %}
+                                <form method="post" action="{% url 'dashboard:delete_user' u.id %}" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to permanently delete this account? This action cannot be undone.');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="neu-btn neu-btn-outline" style="color: var(--danger); border-color: rgba(214, 48, 49, 0.2); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); font-size: var(--text-sm);">
+                                        <i data-lucide="trash-2" style="width:16px;height:16px; display:inline"></i> Delete
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" style="padding: var(--space-8); text-align: center; color: var(--text-muted);">No {{ role_display|lower }} found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
