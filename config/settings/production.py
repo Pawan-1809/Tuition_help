@@ -9,7 +9,22 @@ from .base import *  # noqa: F401, F403
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = [
+    host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if host.strip()
+]
+
+# Trust HTTPS termination at Render proxy.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
+# Prevent CSRF origin failures on production domains.
+raw_csrf_origins = [
+    origin.strip()
+    for origin in os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
+]
+derived_csrf_origins = [f'https://{host}' for host in ALLOWED_HOSTS if host != '*']
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(raw_csrf_origins + derived_csrf_origins))
 
 # ── Database (PostgreSQL) ──────────────────────────────
 import dj_database_url
