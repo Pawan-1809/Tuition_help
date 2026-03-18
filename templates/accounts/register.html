@@ -1,5 +1,10 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Create Account{%
-endblock %} {% block content %}
+<!-- prettier-ignore -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
 <div class="auth-page">
   <div class="auth-container">
     <div class="auth-card">
@@ -97,8 +102,8 @@ endblock %} {% block content %}
 
         {% if user_form.non_field_errors %}
         <div class="alert alert-error">
-          {% for e in user_form.non_field_errors %}<span>{{ e }}</span>{% endfor
-          %}
+          {% for e in user_form.non_field_errors %}<span>{{ e }}</span>
+          {% endfor %}
         </div>
         {% endif %}
 

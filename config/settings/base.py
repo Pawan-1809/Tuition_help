@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount.providers.google',
     'django_filters',
     'corsheaders',
+    'axes',
 ]
 
 LOCAL_APPS = [
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -123,6 +125,7 @@ SITE_ID = 1
 
 # ── Django Allauth ─────────────────────────────────────
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
     'apps.accounts.backends.EmailOrPhoneBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -132,7 +135,7 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -186,3 +189,24 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+
+# -- Security & Authentication Policies -----------------
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
+
+SESSION_COOKIE_AGE = 86400  # 1 day
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = not DEBUG
+PASSWORD_RESET_TIMEOUT = 3600  # 1 hour
+
+AXES_FAILURE_LIMIT = 5
+
+AXES_COOLOFF_TIME = 1  # 1 hour
+
+AXES_LOCKOUT_TEMPLATE = 'accounts/lockout.html'
+

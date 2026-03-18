@@ -30,3 +30,8 @@ django-cors-headers>=4.4
 
 # ── Utilities ───────────────────────────────
 django-extensions>=3.2
+
+# -- Security
+argon2-cffi>=23.1.0
+django-axes>=6.4.0
+

@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div
+    class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden text-center p-8"
+  >
+    <h2 class="text-2xl font-bold text-red-600 mb-4">Account Locked Out</h2>
+    <p class="text-gray-700 dark:text-gray-300 mb-6">
+      You have exceeded the maximum number of login attempts. Please wait 1 hour
+      before trying again, or reset your password.
+    </p>
+    <a
+      href="{% url 'accounts:login' %}"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+    >
+      Return to Login
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@
         </a>
 
         <!-- Profile Card -->
-        <div class="neu-card reveal" style="padding: var(--space-10); border: 2px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; transition: transform 0.3s; box-shadow: var(--neu-shadow-lg);">
+        <div class="neu-card reveal" style="padding: clamp(1.5rem, 5vw, 2.5rem); border: 2px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; transition: transform 0.3s; box-shadow: var(--neu-shadow-lg);">
             <!-- Decorative Background Shape -->
             <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--accent-gradient); filter: blur(50px); opacity: 0.1; z-index: 0;"></div>
 
@@ -27,11 +27,11 @@
                 </div>
 
                 <!-- Info -->
-                <div style="flex: 1; min-width: 250px; padding-left: var(--space-2);" class="reveal-right">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: var(--space-3);">
-                        <h1 style="font-size: var(--text-4xl); margin: 0; font-family: var(--font-display); font-weight: 800; background: var(--text-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{ tutor.user.full_name }}</h1>
+                <div style="flex: 1 1 250px; min-width: 0;" class="reveal-right">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: var(--space-3); gap: var(--space-4);">
+                        <h1 class="text-gradient" style="font-size: var(--text-4xl); margin: 0; font-family: var(--font-display); font-weight: 800;">{{ tutor.user.full_name }}</h1>
                         
-                        <div style="display: flex; gap: var(--space-2); align-items: center;">
+                        <div style="display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap;">
                             {% if tutor.is_verified %}
                             <span class="neu-badge neu-badge-success" style="padding: var(--space-2) var(--space-3); font-weight: 600;">
                                 <i data-lucide="shield-check" style="width:16px;height:16px"></i> Verified
@@ -67,22 +67,22 @@
                     </div>
 
                     <!-- Connect Actions -->
-                    <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--space-4); width: 100%;">
                         {% if tutor.user.phone_number %}
-                        <a href="tel:{{ tutor.user.phone_number }}" class="neu-btn neu-btn-primary" style="flex: 1; min-width: 140px;">
+                        <a href="tel:{{ tutor.user.phone_number }}" class="neu-btn neu-btn-primary" style="justify-content: center;">
                             <i data-lucide="phone"></i>
                             <span>Call</span>
                         </a>
                         {% endif %}
                         
                         {% if tutor.whatsapp_number or tutor.user.phone_number %}
-                        <a href="https://wa.me/{{ tutor.whatsapp_number|default:tutor.user.phone_number }}" target="_blank" class="neu-btn neu-btn-outline" style="flex: 1; min-width: 140px; color: #25D366; border-color: rgba(37, 211, 102, 0.4); background: rgba(37, 211, 102, 0.05);" onmouseover="this.style.background='rgba(37, 211, 102, 0.1)'" onmouseout="this.style.background='rgba(37, 211, 102, 0.05)'">
+                        <a href="https://wa.me/{{ tutor.whatsapp_number|default:tutor.user.phone_number }}" target="_blank" class="neu-btn neu-btn-outline" style="justify-content: center; color: #25D366; border-color: rgba(37, 211, 102, 0.4); background: rgba(37, 211, 102, 0.05);" onmouseover="this.style.background='rgba(37, 211, 102, 0.1)'" onmouseout="this.style.background='rgba(37, 211, 102, 0.05)'">
                             <i data-lucide="message-circle"></i>
                             <span>WhatsApp</span>
                         </a>
                         {% endif %}
 
-                        <a href="{% url 'chat:chat_with_tutor' tutor.id %}" class="neu-btn neu-btn-outline" style="flex: 1; min-width: 140px;">
+                        <a href="{% url 'chat:chat_with_tutor' tutor.id %}" class="neu-btn neu-btn-outline" style="justify-content: center;">
                             <i data-lucide="message-square"></i>
                             <span>Message</span>
                         </a>
