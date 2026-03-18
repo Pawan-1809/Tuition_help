@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static tutor_tags %}
+
+{% block title %}Find a Tutor{% endblock %}
+{% block meta_description %}Browse our directory of verified tutors. Filter by subject, language, price range, and distance to find your perfect match.{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 100px;">
+    <div class="container">
+        <!-- Directory Header -->
+        <div class="directory-header reveal">
+            <div>
+                <h1>Find Your <span class="text-gradient">Tutor</span></h1>
+                <p class="results-count" id="results-count">
+                    Showing <strong>{{ total_results }}</strong> tutors
+                </p>
+            </div>
+            <div class="directory-search">
+                <i data-lucide="search" class="search-icon" style="width:18px;height:18px"></i>
+                <input type="text" placeholder="Search by name, subject..." id="search-input" name="search" value="{{ request.GET.search|default:'' }}">
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar reveal">
+            <form method="get" id="filter-form">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label><i data-lucide="book-open" style="width:12px;height:12px;display:inline"></i> Subject</label>
+                        <select name="subject" id="filter-subject">
+                            <option value="">All Subjects</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.pk }}" {% if request.GET.subject == subject.pk|stringformat:"d" %}selected{% endif %}>
+                                {{ subject.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i data-lucide="languages" style="width:12px;height:12px;display:inline"></i> Language</label>
+                        <select name="language" id="filter-language">
+                            <option value="">All Languages</option>
+                            {% for lang in languages %}
+                            <option value="{{ lang.pk }}" {% if request.GET.language == lang.pk|stringformat:"d" %}selected{% endif %}>
+                                {{ lang.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i data-lucide="graduation-cap" style="width:12px;height:12px;display:inline"></i> Grade Level</label>
+                        <select name="grade_level" id="filter-grade-level">
+                            <option value="">All Levels</option>
+                            <option value="elementary" {% if request.GET.grade_level == 'elementary' %}selected{% endif %}>Elementary (K-5)</option>
+                            <option value="middle" {% if request.GET.grade_level == 'middle' %}selected{% endif %}>Middle School (6-8)</option>
+                            <option value="high" {% if request.GET.grade_level == 'high' %}selected{% endif %}>High School (9-12)</option>
+                            <option value="college" {% if request.GET.grade_level == 'college' %}selected{% endif %}>College</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i data-lucide="indian-rupee" style="width:12px;height:12px;display:inline"></i> Price Range</label>
+                        <select name="price_range" id="filter-price-range">
+                            <option value="">Any Price</option>
+                            <option value="300-600" {% if request.GET.price_range == '300-600' %}selected{% endif %}>₹300-600/hour</option>
+                            <option value="600-1000" {% if request.GET.price_range == '600-1000' %}selected{% endif %}>₹600-1000/hour</option>
+                            <option value="1000-1500" {% if request.GET.price_range == '1000-1500' %}selected{% endif %}>₹1000-1500/hour</option>
+                            <option value="1500+" {% if request.GET.price_range == '1500+' %}selected{% endif %}>₹1500+/hour</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i data-lucide="monitor" style="width:12px;height:12px;display:inline"></i> Method</label>
+                        <select name="teaching_method" id="filter-method">
+                            <option value="">All Methods</option>
+                            {% for value, label in teaching_methods %}
+                            <option value="{{ value }}" {% if request.GET.teaching_method == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group" style="flex: 0;">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="neu-btn neu-btn-primary" id="filter-submit">
+                            <i data-lucide="filter" style="width:16px;height:16px"></i>
+                            <span>Filter</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tutor Grid -->
+        <div class="tutor-grid stagger-children" id="tutor-grid">
+            {% for tutor in page_obj %}
+            <div class="tutor-card" id="tutor-{{ tutor.pk }}">
+                <div class="tutor-card-header">
+                    <div class="tutor-card-avatar">
+                        {% if tutor.profile_photo %}
+                            <img src="{{ tutor.profile_photo.url }}" alt="{{ tutor.user.full_name }}">
+                        {% else %}
+                            {{ tutor.user.full_name|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="tutor-card-info">
+                        <h3>{{ tutor.user.full_name }}</h3>
+                        <span class="tutor-card-method">
+                            {% if tutor.teaching_method == 'online' %}
+                                <i data-lucide="monitor" style="width:12px;height:12px"></i> Online
+                            {% elif tutor.teaching_method == 'offline' %}
+                                <i data-lucide="map-pin" style="width:12px;height:12px"></i> In-Person
+                            {% else %}
+                                <i data-lucide="repeat" style="width:12px;height:12px"></i> Online & In-Person
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if tutor.is_verified %}
+                    <span class="neu-badge neu-badge-success" style="margin-left: auto;">
+                        <i data-lucide="check" style="width:10px;height:10px"></i> Verified
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="tutor-card-meta">
+                    {% for subject in tutor.subjects.all|slice:":4" %}
+                    <span class="tutor-card-tag">{{ subject.name }}</span>
+                    {% endfor %}
+                    {% if tutor.subjects.count > 4 %}
+                    <span class="tutor-card-tag">+{{ tutor.subjects.count|add:"-4" }} more</span>
+                    {% endif %}
+                </div>
+
+                {% if tutor.bio %}
+                <p class="tutor-card-bio">{{ tutor.bio }}</p>
+                {% endif %}
+
+                <div class="tutor-card-footer">
+                    <span class="tutor-card-price">
+                        ₹{{ tutor.price_per_hour|floatformat:0 }}<small>/hr</small>
+                    </span>
+                    <a href="{% url 'tutors:detail' tutor.pk %}" class="neu-btn neu-btn-sm neu-btn-primary" id="view-tutor-{{ tutor.pk }}">
+                        <span>View Profile</span>
+                        <i data-lucide="arrow-right" style="width:14px;height:14px"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: var(--space-16);">
+                <div class="neu-card" style="max-width: 480px; margin: 0 auto;">
+                    <i data-lucide="search-x" style="width:48px;height:48px;color:var(--text-muted);margin-bottom:var(--space-4)"></i>
+                    <h3>No Tutors Found</h3>
+                    <p>Try adjusting your filters or search terms.</p>
+                    <a href="{% url 'tutors:directory' %}" class="neu-btn neu-btn-primary" style="margin-top: var(--space-4);">
+                        <span>Clear Filters</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="pagination" id="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" id="page-prev">
+                <i data-lucide="chevron-left" style="width:16px;height:16px"></i>
+            </a>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <span class="current">{{ i }}</span>
+                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                    <a href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" id="page-next">
+                <i data-lucide="chevron-right" style="width:16px;height:16px"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Live search with debounce
+    const searchInput = document.getElementById('search-input');
+    const filterForm = document.getElementById('filter-form');
+
+    if (searchInput && filterForm) {
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                // Add search to filter form and submit
+                let searchField = filterForm.querySelector('input[name="search"]');
+                if (!searchField) {
+                    searchField = document.createElement('input');
+                    searchField.type = 'hidden';
+                    searchField.name = 'search';
+                    filterForm.appendChild(searchField);
+                }
+                searchField.value = searchInput.value;
+                filterForm.submit();
+            }, 600);
+        });
+    }
+});
+</script>
+{% endblock %}

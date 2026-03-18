@@ -1,0 +1,9 @@
+<!-- Placeholder: tutors/partials/tutor_cards.html -->
+{% for tutor in page_obj %}
+<div class="tutor-card">
+    <h3>{{ tutor.user.full_name }}</h3>
+    <p>₹{{ tutor.price_per_hour }}/hr</p>
+</div>
+{% empty %}
+<p>No tutors found.</p>
+{% endfor %}

@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static tutor_tags %}
+
+{% block title %}{{ tutor.user.full_name }} — Tutor Profile{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 100px;">
+    <div class="container" style="max-width: 900px;">
+        <!-- Back Link -->
+        <a href="{% url 'tutors:directory' %}" style="display: inline-flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-8); color: var(--text-secondary);" id="back-to-directory">
+            <i data-lucide="arrow-left" style="width:16px;height:16px"></i> Back to Directory
+        </a>
+
+        <!-- Profile Card -->
+        <div class="neu-card reveal" style="padding: var(--space-10); border: 2px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden; transition: transform 0.3s; box-shadow: var(--neu-shadow-lg);">
+            <!-- Decorative Background Shape -->
+            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--accent-gradient); filter: blur(50px); opacity: 0.1; z-index: 0;"></div>
+
+            <div style="display: flex; gap: var(--space-6); align-items: start; flex-wrap: wrap; position: relative; z-index: 1;">
+                <!-- Avatar -->
+                <div class="tutor-card-avatar neu-avatar-xl reveal-left" style="font-size: var(--text-4xl); margin-top: var(--space-2); transform-origin: center; transition: transform 0.4s var(--transition-spring);">
+                    {% if tutor.profile_photo %}
+                        <img src="{{ tutor.profile_photo.url }}" alt="{{ tutor.user.full_name }}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+                    {% else %}
+                        {{ tutor.user.full_name|first|upper }}
+                    {% endif %}
+                </div>
+
+                <!-- Info -->
+                <div style="flex: 1; min-width: 250px; padding-left: var(--space-2);" class="reveal-right">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: var(--space-3);">
+                        <h1 style="font-size: var(--text-4xl); margin: 0; font-family: var(--font-display); font-weight: 800; background: var(--text-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{ tutor.user.full_name }}</h1>
+                        
+                        <div style="display: flex; gap: var(--space-2); align-items: center;">
+                            {% if tutor.is_verified %}
+                            <span class="neu-badge neu-badge-success" style="padding: var(--space-2) var(--space-3); font-weight: 600;">
+                                <i data-lucide="shield-check" style="width:16px;height:16px"></i> Verified
+                            </span>
+                            {% endif %}
+                            <span class="neu-badge" style="background: var(--warning); color: #fff; padding: var(--space-2) var(--space-3); font-weight: 600; box-shadow: var(--neu-shadow-sm);">
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor"></i>
+                                {% if avg_rating > 0 %}{{ avg_rating }} / 5.0{% else %}No ratings{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: var(--space-6); margin-bottom: var(--space-4); color: var(--text-secondary); font-size: var(--text-lg); flex-wrap: wrap;">
+                        <span style="display: inline-flex; align-items: center; gap: var(--space-2); background: var(--bg-primary); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); box-shadow: var(--neu-shadow-inset);">
+                        {% if tutor.teaching_method == 'online' %}
+                            <i data-lucide="monitor"></i> Online Tutoring
+                        {% elif tutor.teaching_method == 'offline' %}
+                            <i data-lucide="map-pin"></i> In-Person Tutoring
+                        {% else %}
+                            <i data-lucide="repeat"></i> Hybrid Mode
+                        {% endif %}
+                        </span>
+                        
+                        {% if tutor.experience_years %}
+                        <span style="display: inline-flex; align-items: center; gap: var(--space-2); background: var(--bg-primary); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); box-shadow: var(--neu-shadow-inset);">
+                            <i data-lucide="briefcase"></i> {{ tutor.experience_years }} Yrs Exp
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="tutor-card-price" style="font-size: var(--text-4xl); margin-bottom: var(--space-6); font-weight: 900; color: var(--text-primary); text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        ₹{{ tutor.price_per_hour|floatformat:0 }}<span style="font-size: var(--text-lg); color: var(--text-muted); font-weight: 500;">/hour</span>
+                    </div>
+
+                    <!-- Connect Actions -->
+                    <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+                        {% if tutor.user.phone_number %}
+                        <a href="tel:{{ tutor.user.phone_number }}" class="neu-btn neu-btn-primary" style="flex: 1; min-width: 140px;">
+                            <i data-lucide="phone"></i>
+                            <span>Call</span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if tutor.whatsapp_number or tutor.user.phone_number %}
+                        <a href="https://wa.me/{{ tutor.whatsapp_number|default:tutor.user.phone_number }}" target="_blank" class="neu-btn neu-btn-outline" style="flex: 1; min-width: 140px; color: #25D366; border-color: rgba(37, 211, 102, 0.4); background: rgba(37, 211, 102, 0.05);" onmouseover="this.style.background='rgba(37, 211, 102, 0.1)'" onmouseout="this.style.background='rgba(37, 211, 102, 0.05)'">
+                            <i data-lucide="message-circle"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        {% endif %}
+
+                        <a href="{% url 'chat:chat_with_tutor' tutor.id %}" class="neu-btn neu-btn-outline" style="flex: 1; min-width: 140px;">
+                            <i data-lucide="message-square"></i>
+                            <span>Message</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Grid Info Section -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid rgba(163, 177, 198, 0.2);">
+                
+                <!-- Left Column -->
+                <div>
+                    {% if tutor.bio %}
+                    <div class="reveal" style="margin-bottom: var(--space-6);">
+                        <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2);">
+                            <i data-lucide="user" style="color: var(--accent); width: 18px; height: 18px;"></i> About Me
+                        </h3>
+                        <p style="line-height: 1.6; color: var(--text-secondary); font-size: var(--text-sm); padding: var(--space-4); background: var(--bg-main); border-radius: var(--radius-lg); box-shadow: var(--neu-shadow-inset); margin: 0;">{{ tutor.bio }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if tutor.qualifications %}
+                    <div class="reveal" style="margin-bottom: var(--space-6);">
+                        <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2);">
+                            <i data-lucide="award" style="color: var(--accent); width: 18px; height: 18px;"></i> Qualifications
+                        </h3>
+                        <p style="line-height: 1.6; color: var(--text-secondary); font-size: var(--text-sm); padding: var(--space-4); background: var(--bg-main); border-radius: var(--radius-lg); box-shadow: var(--neu-shadow-inset); margin: 0;">{{ tutor.qualifications }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="reveal" style="margin-bottom: var(--space-6);">
+                        <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2);">
+                            <i data-lucide="book-open" style="color: var(--accent); width: 18px; height: 18px;"></i> Teaching Details
+                        </h3>
+                        <div style="padding: var(--space-5); background: var(--bg-main); border-radius: var(--radius-lg); box-shadow: var(--neu-shadow-inset); display: flex; flex-direction: column; gap: var(--space-5);">
+                            
+                            <!-- Subjects -->
+                            <div>
+                                <h4 style="font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">Subjects</h4>
+                                <div class="tutor-card-meta" style="gap: var(--space-2);">
+                                    {% for subject in tutor.subjects.all %}
+                                    <span class="tutor-card-tag" style="background: var(--bg-primary); font-size: 12px; padding: 4px 10px; box-shadow: var(--neu-shadow-sm);">{{ subject.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Grades -->
+                            <div>
+                                <h4 style="font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">Grades Taught</h4>
+                                <div class="tutor-card-meta" style="gap: var(--space-2);">
+                                    <span class="tutor-card-tag" style="background: var(--bg-primary); font-size: 12px; padding: 4px 10px; box-shadow: var(--neu-shadow-sm); color: var(--accent);">{{ tutor.get_grade_level_display }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Languages -->
+                            <div>
+                                <h4 style="font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">Languages</h4>
+                                <div class="tutor-card-meta" style="gap: var(--space-2);">
+                                    {% for lang in tutor.languages.all %}
+                                    <span class="tutor-card-tag" style="background: var(--bg-primary); font-size: 12px; padding: 4px 10px; box-shadow: var(--neu-shadow-sm);">{{ lang.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            {% if tutor.address %}
+                            <div>
+                                <h4 style="font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">Location</h4>
+                                <p style="font-size: var(--text-sm); line-height: 1.4; margin: 0; color: var(--text-secondary); display: flex; align-items: start; gap: var(--space-2);">
+                                    <i data-lucide="map-pin" style="width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px;"></i>
+                                    {{ tutor.address }}
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="neu-divider" style="margin: var(--space-6) 0; opacity: 0.5;"></div>
+            <div class="reveal">
+                <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-2);">
+                    <i data-lucide="star" style="color: var(--warning);"></i> Parent Reviews
+                </h3>
+                
+                {% if request.user.is_authenticated and request.user.is_parent %}
+                    <div class="neu-card-flat" style="margin-bottom: var(--space-6); background: var(--bg-primary);">
+                        <h4 style="font-size: var(--text-base); margin-bottom: var(--space-3);">Leave a Review</h4>
+                        <form method="post" action="{% url 'tutors:submit_review' tutor.id %}">
+                            {% csrf_token %}
+                            <div class="form-group" style="margin-bottom: var(--space-4);">
+                                <label style="display:block; margin-bottom:var(--space-2);">Rating</label>
+                                <div class="neu-radio" style="display: flex; gap: var(--space-2);">
+                                    {% for i in "12345" %}
+                                    <input type="radio" id="rating_{{ i }}" name="rating" value="{{ i }}" style="display:none;" {% if user_review and user_review.rating|stringformat:"s" == i %}checked{% endif %}>
+                                    <label for="rating_{{ i }}" style="padding: var(--space-2) var(--space-3); cursor:pointer;">
+                                        {{ i }} <i data-lucide="star" style="width:14px;height:14px;display:inline;fill:currentColor"></i>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: var(--space-4);">
+                                <label for="comment" style="display:block; margin-bottom:var(--space-2);">Review Comment (Optional)</label>
+                                <textarea name="comment" class="neu-textarea" id="comment" placeholder="Write your review here...">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+                            </div>
+                            <button type="submit" class="neu-btn neu-btn-primary">
+                                {% if user_review %}<span>Update Review</span>{% else %}<span>Submit Review</span>{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                {% elif not request.user.is_authenticated %}
+                    <p style="margin-bottom: var(--space-4);"><a href="{% url 'accounts:login' %}">Log in as a Parent</a> to leave a review.</p>
+                {% endif %}
+
+                <div>
+                    {% for review in reviews %}
+                        <div style="margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--bg-dark); display: flex; flex-direction: column; gap: var(--space-2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="color: var(--text-primary);">{{ review.parent.full_name }}</strong>
+                                <span class="neu-badge" style="background: var(--warning); color: var(--text-primary);">
+                                    {{ review.rating }} <i data-lucide="star" style="width:12px;height:12px;display:inline;fill:currentColor"></i>
+                                </span>
+                            </div>
+                            {% if review.comment %}
+                                <p style="margin: 0;">{{ review.comment }}</p>
+                            {% endif %}
+                            <span style="font-size: var(--text-xs); color: var(--text-muted);">{{ review.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    {% empty %}
+                        <p style="color: var(--text-muted);">No reviews yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Tutors -->
+        {% if related_tutors %}
+        <div style="margin-top: var(--space-12);">
+            <h2 style="margin-bottom: var(--space-8);" class="reveal">Similar <span class="text-gradient">Tutors</span></h2>
+            <div class="tutor-grid stagger-children">
+                {% for rt in related_tutors %}
+                <div class="tutor-card">
+                    <div class="tutor-card-header">
+                        <div class="tutor-card-avatar">{{ rt.user.full_name|first|upper }}</div>
+                        <div class="tutor-card-info">
+                            <h3>{{ rt.user.full_name }}</h3>
+                        </div>
+                    </div>
+                    <div class="tutor-card-footer">
+                        <span class="tutor-card-price">₹{{ rt.price_per_hour|floatformat:0 }}<small>/hr</small></span>
+                        <a href="{% url 'tutors:detail' rt.pk %}" class="neu-btn neu-btn-sm neu-btn-primary">
+                            <span>View</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
