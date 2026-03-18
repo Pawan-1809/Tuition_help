@@ -25,6 +25,9 @@ FROM dependencies AS application
 
 COPY . .
 
+# Ensure production settings are used in container runtime commands.
+ENV DJANGO_SETTINGS_MODULE=config.settings.production
+
 # Create directories for static and media files
 RUN mkdir -p /app/staticfiles /app/media
 
@@ -44,10 +47,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')" || exit 1
 
-# Default command: run with gunicorn
-CMD ["gunicorn", "config.wsgi:application", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "3", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-"]
+# Default command: migrate first, then run ASGI server.
+CMD ["sh", "-c", "python manage.py migrate --no-input && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application"]

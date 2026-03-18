@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
+from django.db import OperationalError, ProgrammingError
 
 from .forms import (
     PhoneLoginForm, OTPVerifyForm, RoleSelectionForm,
@@ -61,15 +62,22 @@ def register_view(request):
         user_form = UserRegistrationForm(request.POST)
         role_form = RoleSelectionForm(request.POST)
 
-        if user_form.is_valid() and role_form.is_valid():
-            user = user_form.save(commit=False)
-            user.role = role_form.cleaned_data['role']
-            user.auth_provider = User.AuthProvider.EMAIL
-            user.save()
+        try:
+            if user_form.is_valid() and role_form.is_valid():
+                user = user_form.save(commit=False)
+                user.role = role_form.cleaned_data['role']
+                user.auth_provider = User.AuthProvider.EMAIL
+                user.save()
 
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            messages.success(request, f'Welcome to Tuition Connect, {user.full_name}!')
-            return redirect('accounts:redirect_after_login')
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                messages.success(request, f'Welcome to Tuition Connect, {user.full_name}!')
+                return redirect('accounts:redirect_after_login')
+        except (ProgrammingError, OperationalError):
+            logger.exception('Database is not ready for registration.')
+            messages.error(
+                request,
+                'Service is initializing. Please try again in a minute.'
+            )
     else:
         user_form = UserRegistrationForm()
         role_form = RoleSelectionForm()
