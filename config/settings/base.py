@@ -164,6 +164,9 @@ RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '')
 RAZORPAY_WEBHOOK_SECRET = os.getenv('RAZORPAY_WEBHOOK_SECRET', '')
 RAZORPAY_REGISTRATION_FEE = int(os.getenv('RAZORPAY_REGISTRATION_FEE', '499'))
 
+# Demo toggle: allow publishing tutor profiles without payment.
+DEMO_BYPASS_PAYMENT = os.getenv('DEMO_BYPASS_PAYMENT', 'True').lower() in ('true', '1', 'yes')
+
 # ── OTP Settings ───────────────────────────────────────
 OTP_EXPIRY_SECONDS = int(os.getenv('OTP_EXPIRY_SECONDS', '300'))
 

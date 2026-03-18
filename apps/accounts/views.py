@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
 from django.db import OperationalError, ProgrammingError
+from django.conf import settings
 
 from .forms import (
     PhoneLoginForm, OTPVerifyForm, RoleSelectionForm,
@@ -257,6 +258,12 @@ def onboarding_view(request, step=1):
             else:
 
                 profile.onboarding_step = total_steps + 1
+                if settings.DEMO_BYPASS_PAYMENT:
+                    profile.is_published = True
+                    profile.save(update_fields=['onboarding_step', 'is_published'])
+                    messages.success(request, 'Profile complete! Your tutor profile is now live in demo mode.')
+                    return redirect('accounts:profile')
+
                 profile.save(update_fields=['onboarding_step'])
                 messages.success(request, 'Profile complete! Proceed to payment.')
                 return redirect('payments:checkout')

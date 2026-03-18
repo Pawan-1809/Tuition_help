@@ -35,6 +35,18 @@ def checkout_view(request):
 
     profile = get_object_or_404(TutorProfile, user=request.user)
 
+    if settings.DEMO_BYPASS_PAYMENT:
+        if not profile.is_profile_complete:
+            messages.warning(request, 'Please complete your profile before going live.')
+            return redirect('accounts:onboarding', step=profile.onboarding_step)
+
+        if not profile.is_published:
+            profile.is_published = True
+            profile.save(update_fields=['is_published'])
+
+        messages.success(request, 'Demo mode is active. Payment is bypassed and your profile is live.')
+        return redirect('accounts:profile')
+
     if profile.payment_completed:
         messages.info(request, 'You have already completed payment.')
         return redirect('accounts:profile')

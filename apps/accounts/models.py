@@ -9,6 +9,7 @@ Custom User model with role-based access, plus TutorProfile and ParentProfile.
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 from .managers import CustomUserManager
 
 
@@ -180,7 +181,9 @@ class TutorProfile(models.Model):
     @property
     def can_be_published(self):
         """Profile can only be published if complete and payment is done."""
-        return self.is_profile_complete and self.payment_completed
+        return self.is_profile_complete and (
+            self.payment_completed or settings.DEMO_BYPASS_PAYMENT
+        )
 
     @property
     def subject_list(self):
