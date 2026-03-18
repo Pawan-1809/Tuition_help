@@ -20,10 +20,20 @@ def home_view(request):
     from apps.accounts.models import TutorProfile
     from django.contrib.auth import get_user_model
     User = get_user_model()
+    
+    total_tutors = 0
+    total_users = 0
+    
+    try:
+        total_tutors = TutorProfile.objects.filter(is_published=True).count()
+        total_users = User.objects.count()
+    except Exception:
+        # Failsafe if hitting home_view during fresh deploy before tables exist
+        pass
 
     context = {
-        'total_tutors': TutorProfile.objects.filter(is_published=True).count(),
-        'total_users': User.objects.count(),
+        'total_tutors': total_tutors,
+        'total_users': total_users,
     }
     return render(request, 'home.html', context)
 
