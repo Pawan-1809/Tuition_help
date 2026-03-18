@@ -1,0 +1,82 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Login{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <i data-lucide="log-in"></i>
+        </div>
+        <h2>Welcome Back</h2>
+        <p>Sign in to your Tuition Connect account</p>
+      </div>
+
+      <!-- Email Password Form -->
+      <form method="post" action="{% url 'accounts:login' %}">
+        {% csrf_token %} {% if messages %}
+        <div class="messages" style="margin-bottom: var(--space-4)">
+          {% for message in messages %}
+          <div
+            class="neu-badge neu-badge-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}"
+            style="
+              width: 100%;
+              justify-content: center;
+              padding: var(--space-3);
+              margin-bottom: gap-2;
+            "
+          >
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %} {% if form.non_field_errors %}
+        <div
+          class="neu-badge neu-badge-danger"
+          style="
+            width: 100%;
+            justify-content: center;
+            padding: var(--space-3);
+            margin-bottom: var(--space-4);
+          "
+        >
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="form-group" style="margin-bottom: var(--space-4)">
+          {{ form.login.label_tag }} {{ form.login }} {% if form.login.errors %}
+          <span style="color: red; font-size: 0.8rem"
+            >{{ form.login.errors.0 }}</span
+          >
+          {% endif %}
+        </div>
+
+        <!-- prettier-ignore -->
+        <div class="form-group" style="margin-bottom: var(--space-6)">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          {% if form.password.errors %}
+          <span style="color: red; font-size: 0.8rem">{{ form.password.errors.0 }}</span>
+          {% endif %}
+        </div>
+
+        <button
+          type="submit"
+          class="neu-btn neu-btn-primary"
+          style="width: 100%; margin-bottom: var(--space-4)"
+        >
+          <i data-lucide="log-in" style="width: 20px; height: 20px"></i>
+          <span>Log In</span>
+        </button>
+      </form>
+
+      <div class="auth-footer" style="margin-top: var(--space-6)">
+        <p>
+          Don't have an account?
+          <a href="{% url 'accounts:register' %}">Sign up for free</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Create Account{% endblock %} {% block content %}
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <i data-lucide="user-plus"></i>
+        </div>
+        <h2>Create Account</h2>
+        <p>Join Tuition Connect today</p>
+      </div>
+
+      <form method="post" id="register-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_full_name"
+            ><i
+              data-lucide="user"
+              style="width: 14px; height: 14px; display: inline"
+            ></i>
+            Full Name</label
+          >
+          {{ user_form.full_name }} {% if user_form.full_name.errors %}
+          <ul class="errorlist">
+            {% for e in user_form.full_name.errors %}
+            <li>{{ e }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_email"
+            ><i
+              data-lucide="mail"
+              style="width: 14px; height: 14px; display: inline"
+            ></i>
+            Email</label
+          >
+          {{ user_form.email }} {% if user_form.email.errors %}
+          <ul class="errorlist">
+            {% for e in user_form.email.errors %}
+            <li>{{ e }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password1"
+            ><i
+              data-lucide="lock"
+              style="width: 14px; height: 14px; display: inline"
+            ></i>
+            Password</label
+          >
+          {{ user_form.password1 }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password2"
+            ><i
+              data-lucide="lock"
+              style="width: 14px; height: 14px; display: inline"
+            ></i>
+            Confirm Password</label
+          >
+          {{ user_form.password2 }}
+        </div>
+
+        <!-- Role Selection -->
+        <div class="form-group">
+          <label>I am a...</label>
+          <div class="role-cards" id="role-selection">
+            <div class="role-card" data-role="tutor" id="role-tutor">
+              <div class="role-card-icon">
+                <i data-lucide="book-open"></i>
+              </div>
+              <h4>Tutor</h4>
+              <p>I want to teach</p>
+            </div>
+            <div class="role-card" data-role="parent" id="role-parent">
+              <div
+                class="role-card-icon"
+                style="background: linear-gradient(135deg, #00cec9, #55efc4)"
+              >
+                <i data-lucide="graduation-cap"></i>
+              </div>
+              <h4>Student/Parent</h4>
+              <p>I'm looking for a tutor</p>
+            </div>
+          </div>
+          <input type="hidden" name="role" id="role-input" value="parent" />
+        </div>
+
+        {% if user_form.non_field_errors %}
+        <div class="alert alert-error">
+          {% for e in user_form.non_field_errors %}<span>{{ e }}</span>{% endfor           %}
+        </div>
+        {% endif %}
+
+        <button
+          type="submit"
+          class="neu-btn neu-btn-primary neu-btn-lg"
+          style="width: 100%"
+          id="register-submit"
+        >
+          <i data-lucide="arrow-right" style="width: 20px; height: 20px"></i>
+          <span>Create Account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>
+          Already have an account?
+          <a href="{% url 'accounts:login' %}">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const roleCards = document.querySelectorAll(".role-card");
+    const roleInput = document.getElementById("role-input");
+
+    roleCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        roleCards.forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+        roleInput.value = card.dataset.role;
+      });
+    });
+
+    // Default selection
+    document.querySelector('[data-role="parent"]').classList.add("selected");
+  });
+</script>
+{% endblock %}

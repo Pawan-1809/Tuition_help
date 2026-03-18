@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile | Tuition Connect{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 100px;">
+    <div class="container" style="max-width: 600px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+            <h1 style="font-size: var(--text-3xl); margin: 0;">My <span class="text-gradient">Profile</span></h1>
+            <form method="post" action="{% url 'accounts:delete_account' %}" onsubmit="return confirm('Are you sure you want to delete your account completely? This action cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" class="neu-btn neu-btn-outline" style="border-color: var(--danger); color: var(--danger);">
+                    <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i> Delete Account
+                </button>
+            </form>
+        </div>
+
+        <div class="neu-card reveal">
+            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-6);">Edit Details</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text }}</span>
+                        {% endif %}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <div style="margin-top: var(--space-6);">
+                    <button type="submit" class="neu-btn neu-btn-primary" style="width: 100%;">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

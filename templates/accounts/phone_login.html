@@ -1,0 +1,13 @@
+<!-- Placeholder: accounts/phone_login.html -->
+{% extends 'base.html' %}
+{% block title %}Phone Login — Tuition Connect{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Login with Phone</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send OTP</button>
+    </form>
+</div>
+{% endblock %}

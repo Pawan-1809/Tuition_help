@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Onboarding — Step {{ step }}{% endblock %}
+
+{% block content %}
+<div class="onboarding-page">
+    <div class="onboarding-container">
+        <!-- Progress -->
+        <div class="onboarding-progress reveal">
+            <div class="steps-indicator">
+                {% for s in "1234"|make_list %}
+                <div class="step-dot {% if forloop.counter < step %}completed{% elif forloop.counter == step %}active{% endif %}" id="step-{{ forloop.counter }}">
+                    {% if forloop.counter < step %}
+                        <i data-lucide="check" style="width:16px;height:16px"></i>
+                    {% else %}
+                        {{ forloop.counter }}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {{ progress_percent }}%"></div>
+            </div>
+        </div>
+
+        <!-- Step Card -->
+        <div class="onboarding-card reveal">
+            <h2>
+                {% if step == 1 %}
+                    <i data-lucide="user" style="width:24px;height:24px;display:inline;color:var(--accent-primary)"></i>
+                {% elif step == 2 %}
+                    <i data-lucide="award" style="width:24px;height:24px;display:inline;color:var(--accent-primary)"></i>
+                {% elif step == 3 %}
+                    <i data-lucide="map-pin" style="width:24px;height:24px;display:inline;color:var(--accent-primary)"></i>
+                {% elif step == 4 %}
+                    <i data-lucide="indian-rupee" style="width:24px;height:24px;display:inline;color:var(--accent-primary)"></i>
+                {% endif %}
+                {{ step_title }}
+            </h2>
+            <p class="step-subtitle">Step {{ step }} of {{ total_steps }} — Complete your tutor profile</p>
+
+            <form method="post" enctype="multipart/form-data" id="onboarding-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    {% if field.errors %}
+                    <ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="onboarding-actions">
+                    {% if step > 1 %}
+                    <a href="{% url 'accounts:onboarding' step|add:'-1' %}" class="neu-btn" id="onboarding-prev">
+                        <i data-lucide="arrow-left" style="width:16px;height:16px"></i>
+                        <span>Previous</span>
+                    </a>
+                    {% else %}
+                    <div></div>
+                    {% endif %}
+
+                    <button type="submit" class="neu-btn neu-btn-primary neu-btn-lg" id="onboarding-next">
+                        {% if step == total_steps %}
+                            <span>Complete & Pay</span>
+                            <i data-lucide="credit-card" style="width:18px;height:18px"></i>
+                        {% else %}
+                            <span>Next Step</span>
+                            <i data-lucide="arrow-right" style="width:18px;height:18px"></i>
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

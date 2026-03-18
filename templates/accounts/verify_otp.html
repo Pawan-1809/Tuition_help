@@ -1,0 +1,14 @@
+<!-- Placeholder: accounts/verify_otp.html -->
+{% extends 'base.html' %}
+{% block title %}Verify OTP — Tuition Connect{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Verify OTP</h1>
+    <p>OTP sent to {{ phone }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Verify</button>
+    </form>
+</div>
+{% endblock %}

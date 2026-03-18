@@ -1,0 +1,15 @@
+<!-- Placeholder: accounts/phone_register.html -->
+{% extends 'base.html' %}
+{% block title %}Complete Registration — Tuition Connect{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Complete Registration</h1>
+    <p>Phone: {{ phone }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="full_name" placeholder="Your full name" required>
+        {{ role_form.as_p }}
+        <button type="submit">Create Account</button>
+    </form>
+</div>
+{% endblock %}

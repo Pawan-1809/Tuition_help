@@ -1,0 +1,13 @@
+<!-- Placeholder: accounts/select_role.html -->
+{% extends 'base.html' %}
+{% block title %}Select Role — Tuition Connect{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Select Your Role</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ role_form.as_p }}
+        <button type="submit">Continue</button>
+    </form>
+</div>
+{% endblock %}
