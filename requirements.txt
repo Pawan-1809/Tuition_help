@@ -35,3 +35,6 @@ django-extensions>=3.2
 argon2-cffi>=23.1.0
 django-axes>=6.4.0
 
+dj-database-url>=2.1.0
+channels>=4.0.0
+daphne>=4.0.0
