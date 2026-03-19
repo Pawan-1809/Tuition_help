@@ -248,15 +248,3 @@ If using Docker runtime, ensure startup executes migrations before serving traff
 
 - Provide REDIS_URL, or leave it empty to use built-in fallback.
 
-## Author
-
-Pawan Kumar
-
-- Portfolio: https://pawan-portfolio-dev.vercel.app/
-- GitHub: https://github.com/Pawan-1809
-- Instagram: https://www.instagram.com/mr.pawan.kumar/
-- Email: pawankr16123114@gmail.com
-
-## License
-
-This project is available for educational and demonstration purposes.
