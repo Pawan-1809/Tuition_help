@@ -7,6 +7,7 @@ Tutor directory, search, filter, and detail views.
 """
 
 import math
+import logging
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
@@ -20,11 +21,21 @@ from .models import Subject, Language, Review
 from .filters import TutorDirectoryFilter
 
 
+logger = logging.getLogger(__name__)
+
+
 def directory_view(request):
     """
     Main tutor directory with filtering, sorting, and pagination.
     Only shows published tutors.
     """
+    empty_qs = TutorProfile.objects.none()
+    page_obj = Paginator(empty_qs, 12).get_page(1)
+    tutor_filter = TutorDirectoryFilter(request.GET, queryset=empty_qs)
+    subjects = []
+    languages = []
+    total_results = 0
+
     try:
         queryset = TutorProfile.objects.filter(
             is_published=True,
@@ -54,11 +65,7 @@ def directory_view(request):
         languages = Language.objects.all()
         total_results = filtered_qs.count()
     except Exception:
-        page_obj = None
-        tutor_filter = None
-        subjects = []
-        languages = []
-        total_results = 0
+        logger.exception('Failed to load tutor directory data')
 
     context = {
         'page_obj': page_obj,
