@@ -1,68 +1,94 @@
 # Tuition Connect
 
-A full-stack Django platform that connects parents and students with home tutors.
+<div align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=700&size=28&pause=1200&color=1D9BF0&center=true&vCenter=true&width=900&lines=Tutor+Discovery+Platform+Built+With+Django;Role-Based+Onboarding+%2B+Payments+%2B+Chat;Production-Ready+Deployments+With+Seeded+Demo+Data" alt="Typing banner" />
+</div>
 
-Tuition Connect includes role-based onboarding, tutor discovery with filtering, OTP and email authentication, secure login protection, real-time chat foundation, and production-ready deployment support.
+<div align="center">
+  <img src="https://img.shields.io/badge/Django-5.1-0d3b2e?style=for-the-badge&logo=django&logoColor=white" alt="Django 5.1" />
+  <img src="https://img.shields.io/badge/Channels-WebSockets-1b4965?style=for-the-badge&logo=django&logoColor=white" alt="Channels" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Production-264653?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/SQLite-Development-4c956c?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Razorpay-Integrated-2457f5?style=for-the-badge" alt="Razorpay" />
+</div>
 
-## Why This Project
+<p align="center">
+  <b>Tuition Connect</b> is a full-stack Django marketplace for connecting students and parents with tutors through rich tutor profiles, onboarding, filtering, payments, and chat.
+</p>
 
-This project is built to solve a real workflow:
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active%20Development-0f766e?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Demo%20Seed-Kolkata%20Tutors-f59e0b?style=flat-square" alt="Demo seed" />
+  <img src="https://img.shields.io/badge/Deploy-Render%20Ready-7c3aed?style=flat-square" alt="Deploy ready" />
+</p>
 
-- Tutors can register, complete profile onboarding, and publish availability.
-- Parents can browse, filter, and compare tutor profiles.
-- The platform supports secure authentication and profile-driven matching.
+---
 
-## Key Features
+## Snapshot
 
-- Role-based user system
-  - Tutor
-  - Parent/Student
-  - Admin
-- Authentication options
-  - Email/password login
-  - Phone OTP login and registration
-  - Google OAuth via Django Allauth
-- Tutor onboarding workflow
-  - Multi-step guided profile completion
-  - Subject/language selection
-  - Location and teaching preferences
-- Tutor directory
-  - Filters for subjects, language, grade level, pricing, teaching method
-  - Pagination and async-friendly partial rendering
-- Payments integration
-  - Razorpay order creation, verification, webhook handling
-- Security hardening
-  - Argon2 hashing
-  - Django Axes brute-force protection
-  - CSRF trusted origins and proxy-aware production settings
-- Deployment-ready setup
-  - Docker and docker-compose
-  - Render scripts for build/start
-  - PostgreSQL-ready production settings
+```text
+Students/Parents -> Search tutors -> Filter -> View profile -> Chat / Connect
+Tutors -> Register -> Complete onboarding -> Pay when transactions are enabled -> Go live
+Admins -> Track users, tutor activity, and payment metrics
+```
 
-## Temporary Demo Behavior
+## Note
 
-The project is currently configured for demonstration mode in production:
+> Transactions are temporarily paused in the current setup.
+> Tutors can complete registration without payment while the payment gate is paused.
+> If transactions are activated again, tutors will only be able to register and go live after successful payment.
 
-- Tutor payment gate is bypassed.
-- Completed tutor profiles can go live directly.
+## Highlights
 
-Current toggle behavior:
+- Modular Django monolith with focused apps for `accounts`, `tutors`, `payments`, `dashboard`, and `chat`
+- Custom user model with tutor, parent/student, and admin roles
+- Multi-step tutor onboarding with profile details, subjects, languages, pricing, and location
+- Tutor directory with filtering by subject, language, grade level, teaching method, experience, and price
+- Razorpay payment flow for tutor registration fees
+- Real-time chat foundation powered by Django Channels
+- Demo-safe production flow with automatic seeding of Kolkata tutor sample data on deploy/startup
+- Docker, Render, PostgreSQL, and SQLite support
 
-- Base setting reads DEMO_BYPASS_PAYMENT from environment.
-- Production currently forces DEMO_BYPASS_PAYMENT = True.
+## Architecture
 
-When you want to restore paid publishing, set the production override back to False and redeploy.
+### Apps
+
+- `apps/accounts`
+  Handles auth, onboarding, custom user model, tutor profiles, parent profiles, OTP flow, and account pages.
+- `apps/tutors`
+  Handles tutor directory, search, filters, subjects, languages, reviews, and seed data.
+- `apps/payments`
+  Handles Razorpay order creation, payment verification, webhooks, and payment records.
+- `apps/dashboard`
+  Handles admin analytics and user management views.
+- `apps/chat`
+  Handles inbox, thread views, message persistence, and WebSocket consumers.
+
+### Core Data Flow
+
+```text
+User
+├── TutorProfile
+│   ├── Subjects (many-to-many)
+│   ├── Languages (many-to-many)
+│   └── Payments / Reviews
+└── ParentProfile
+    ├── Preferred Subjects
+    └── Preferred Languages
+```
 
 ## Tech Stack
 
-- Backend: Django 5.1, Channels, Daphne
-- Database: PostgreSQL (production), SQLite (development default)
-- Cache/Session: Redis optional in production with automatic fallback
-- Frontend: Django templates, static CSS/JS
-- Auth: Django Allauth, custom auth backends, OTP flow
-- Security: Django Axes, Argon2, secure cookie and proxy settings
-- Deployment: Docker, Render
+| Layer | Tools |
+|---|---|
+| Backend | Django 5.1, Django Channels, Daphne |
+| Database | PostgreSQL in production, SQLite in development |
+| Auth | Django Allauth, custom email/phone backends, OTP flow |
+| Payments | Razorpay |
+| Frontend | Django templates, custom CSS, vanilla JavaScript |
+| Realtime | WebSockets via Channels |
+| Security | Argon2, Django Axes, CSRF and proxy-aware production settings |
+| Deployment | Docker, Docker Compose, Render |
 
 ## Project Structure
 
@@ -71,6 +97,7 @@ Tuition_Connect/
 ├── apps/
 │   ├── accounts/
 │   ├── tutors/
+│   │   └── management/commands/seed_data.py
 │   ├── payments/
 │   ├── dashboard/
 │   └── chat/
@@ -79,91 +106,41 @@ Tuition_Connect/
 │   │   ├── base.py
 │   │   ├── development.py
 │   │   └── production.py
+│   ├── urls.py
 │   ├── asgi.py
-│   ├── wsgi.py
-│   └── urls.py
+│   └── wsgi.py
 ├── templates/
 ├── static/
 ├── media/
-├── Dockerfile
-├── docker-compose.yml
 ├── build.sh
 ├── start.sh
+├── Dockerfile
+├── docker-compose.yml
 ├── manage.py
 └── requirements.txt
 ```
 
-## Quick Start (Local)
+## Local Setup
 
-### 1) Clone and create virtual environment
-
-```bash
-git clone <your-repo-url>
-cd Tuition_Connect
-python -m venv venv
-```
-
-### 2) Activate environment
-
-Windows PowerShell:
+### 1. Create environment
 
 ```powershell
+python -m venv venv
 venv\Scripts\Activate
-```
-
-macOS/Linux:
-
-```bash
-source venv/bin/activate
-```
-
-### 3) Install dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 4) Run migrations
+### 2. Configure environment variables
 
-```bash
-python manage.py migrate
-```
-
-### 5) Start server
-
-```bash
-python manage.py runserver
-```
-
-Application URL:
-
-- http://127.0.0.1:8000/
-
-## Run with Docker Compose
-
-```bash
-docker compose up --build
-```
-
-This starts:
-
-- Web app on port 8000
-- PostgreSQL on port 5432
-- Redis on port 6379
-
-## Environment Variables
-
-Create a .env file at project root.
-
-Recommended variables:
+Create a `.env` file in the project root.
 
 ```env
 DJANGO_SECRET_KEY=replace_me
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,home-tutor-finder-fpzm.onrender.com
-DJANGO_CSRF_TRUSTED_ORIGINS=https://home-tutor-finder-fpzm.onrender.com
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+DJANGO_CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,http://localhost:8000
 
-DATABASE_URL=postgresql://user:password@host:5432/dbname
+DATABASE_URL=
 REDIS_URL=
 
 GOOGLE_CLIENT_ID=
@@ -178,73 +155,136 @@ OTP_EXPIRY_SECONDS=300
 DEMO_BYPASS_PAYMENT=True
 ```
 
-Notes:
+### 3. Run migrations and seed data
 
-- If REDIS_URL is empty in production, app falls back to local-memory cache and DB sessions.
-- In demonstration mode, DEMO_BYPASS_PAYMENT allows direct tutor publishing.
+```powershell
+venv\Scripts\python manage.py migrate
+venv\Scripts\python manage.py seed_data
+```
+
+### 4. Start the app
+
+```powershell
+venv\Scripts\python manage.py runserver
+```
+
+Open: `http://127.0.0.1:8000/`
+
+## Demo Seed Data
+
+The project now seeds a fuller demo dataset with:
+
+- Kolkata-based tutor profiles with Indian names
+- Subjects, languages, pricing, contact details, bios, and coordinates
+- Parent demo accounts
+- Tutor reviews
+
+Run manually:
+
+```powershell
+venv\Scripts\python manage.py seed_data
+```
+
+The deploy pipeline also runs `seed_data` automatically after migrations in:
+
+- `build.sh`
+- `start.sh`
+- `Dockerfile` runtime command
+
+This fixes the common issue where local seed data appears in `db.sqlite3` but not on the deployed production database.
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+Services:
+
+- Web app on port `8000`
+- PostgreSQL on port `5432`
+- Redis on port `6379`
 
 ## Core Routes
 
-Public:
+| Route | Purpose |
+|---|---|
+| `/` | Landing page |
+| `/accounts/login/` | Email login |
+| `/accounts/register/` | Role-based registration |
+| `/accounts/phone/login/` | OTP login |
+| `/accounts/onboarding/<step>/` | Tutor onboarding |
+| `/accounts/profile/` | Tutor or parent profile |
+| `/tutors/` | Tutor directory |
+| `/tutors/<id>/` | Tutor detail page |
+| `/payments/checkout/` | Tutor payment checkout |
+| `/payments/verify/` | Payment verification endpoint |
+| `/payments/webhook/` | Razorpay webhook |
+| `/chat/` | Chat inbox |
+| `/admin/` | Custom admin dashboard |
+| `/health/` | Health check |
 
-- /
-- /tutors/
-- /tutors/<id>/
+## Deployment Notes
 
-Auth:
+### Render
 
-- /accounts/login/
-- /accounts/register/
-- /accounts/phone/login/
-- /accounts/phone/verify/
+- `build.sh` installs dependencies, collects static files, runs migrations, and seeds demo data
+- `start.sh` runs migrations again for safety, reseeds demo data idempotently, and starts Daphne
+- Production uses `config.settings.production`
+- Production database is expected via `DATABASE_URL`
 
-Tutor onboarding and profile:
+### Important
 
-- /accounts/onboarding/<step>/
-- /accounts/profile/
+- Local seeding updates `db.sqlite3`
+- Server seeding updates the production database from `DATABASE_URL`
+- If tutors are visible locally but not on the server, the deployed DB was not seeded before this change
 
-Payments:
+## Security
 
-- /payments/checkout/
-- /payments/verify/
-- /payments/webhook/
+- Argon2 password hashing
+- Django Axes lockout protection
+- CSRF protection and trusted origins support
+- Secure proxy settings for hosted deployments
+- Session hardening in production
 
-Health:
+## Recent Changes
 
-- /health/
-
-## Deployment Notes (Render)
-
-- Build script: build.sh
-- Start script: start.sh
-- Production settings include:
-  - Proxy SSL header support
-  - CSRF trusted origins handling
-  - PostgreSQL via DATABASE_URL
-  - Redis optional fallback
-
-If using Docker runtime, ensure startup executes migrations before serving traffic.
-
-## Security Notes
-
-- Do not use default fallback secret key in production.
-- Set strict ALLOWED_HOSTS and CSRF trusted origins.
-- Configure secure HTTPS behavior in production environment.
-- Keep OAuth and payment secrets in environment variables only.
+- Tutor verification status has been removed from the active platform flow
+- Removed the tutor verification badge/system from the active app flow
+- Added richer Kolkata tutor seed data
+- Updated deploy scripts so demo data seeds on the server automatically
+- Kept payment integration in place while allowing transaction pause mode
 
 ## Troubleshooting
 
-1) UndefinedTable errors in production
+### Seed data is not showing on the server
 
-- Confirm DATABASE_URL is set.
-- Confirm migrations run successfully during deployment.
+Check the following:
 
-2) CSRF 403 on POST in production
+1. The server is using `config.settings.production`
+2. `DATABASE_URL` points to the expected production database
+3. The latest deploy includes the updated `build.sh` and `start.sh`
+4. Migrations completed successfully before `seed_data` ran
 
-- Check DJANGO_CSRF_TRUSTED_ORIGINS includes your exact HTTPS domain.
-- Verify proxy headers are correctly trusted.
+### Tutors are not live
 
-3) Redis connection failure
+Check:
 
-- Provide REDIS_URL, or leave it empty to use built-in fallback.
+1. The tutor profile is complete
+2. `is_published=True`
+3. `DEMO_BYPASS_PAYMENT=True` if transactions are paused
 
+## Author
+
+**Pawan Kumar**
+
+- Portfolio: `https://pawan-portfolio-dev.vercel.app/`
+- GitHub: `https://github.com/Pawan-1809`
+- Instagram: `https://www.instagram.com/mr.pawan.kumar/`
+- Email: `pawankr16123114@gmail.com`
+
+---
+
+<div align="center">
+  <sub>Built for discoverability, onboarding clarity, and faster tutor-student matching.</sub>
+</div>
