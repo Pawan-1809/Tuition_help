@@ -79,8 +79,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class TutorProfile(models.Model):
     """
-    Extended profile for tutors containing teaching details,
-    verification status, and multi-step onboarding progress.
+    Extended profile for tutors containing teaching details
+    and multi-step onboarding progress.
     """
 
     class Gender(models.TextChoices):
@@ -152,7 +152,6 @@ class TutorProfile(models.Model):
         blank=True, null=True
     )
 
-    is_verified = models.BooleanField('verified', default=False)
     is_published = models.BooleanField('published', default=False)
     payment_completed = models.BooleanField('payment completed', default=False)
     onboarding_step = models.PositiveIntegerField('onboarding step', default=1)

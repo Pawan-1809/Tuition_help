@@ -2,7 +2,7 @@
 {% load static tutor_tags %}
 
 {% block title %}Find a Tutor{% endblock %}
-{% block meta_description %}Browse our directory of verified tutors. Filter by subject, language, price range, and distance to find your perfect match.{% endblock %}
+{% block meta_description %}Browse our directory of tutors. Filter by subject, language, price range, and distance to find your perfect match.{% endblock %}
 
 {% block content %}
 <div class="section" style="padding-top: 100px;">
@@ -118,11 +118,6 @@
                             {% endif %}
                         </span>
                     </div>
-                    {% if tutor.is_verified %}
-                    <span class="neu-badge neu-badge-success" style="margin-left: auto;">
-                        <i data-lucide="check" style="width:10px;height:10px"></i> Verified
-                    </span>
-                    {% endif %}
                 </div>
 
                 <div class="tutor-card-meta">

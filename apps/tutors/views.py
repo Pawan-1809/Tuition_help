@@ -23,7 +23,7 @@ from .filters import TutorDirectoryFilter
 def directory_view(request):
     """
     Main tutor directory with filtering, sorting, and pagination.
-    Only shows published and verified tutors.
+    Only shows published tutors.
     """
     try:
         queryset = TutorProfile.objects.filter(

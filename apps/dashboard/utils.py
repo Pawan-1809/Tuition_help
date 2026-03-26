@@ -38,7 +38,6 @@ def get_tutor_stats():
     return {
         'total_profiles': profiles.count(),
         'published': profiles.filter(is_published=True).count(),
-        'verified': profiles.filter(is_verified=True).count(),
         'pending_payment': profiles.filter(payment_completed=False).count(),
         'online_tutors': profiles.filter(teaching_method='online').count(),
         'offline_tutors': profiles.filter(teaching_method='offline').count(),

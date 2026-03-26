@@ -32,11 +32,6 @@
                         <h1 class="text-gradient" style="font-size: var(--text-4xl); margin: 0; font-family: var(--font-display); font-weight: 800;">{{ tutor.user.full_name }}</h1>
                         
                         <div style="display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap;">
-                            {% if tutor.is_verified %}
-                            <span class="neu-badge neu-badge-success" style="padding: var(--space-2) var(--space-3); font-weight: 600;">
-                                <i data-lucide="shield-check" style="width:16px;height:16px"></i> Verified
-                            </span>
-                            {% endif %}
                             <span class="neu-badge" style="background: var(--warning); color: #fff; padding: var(--space-2) var(--space-3); font-weight: 600; box-shadow: var(--neu-shadow-sm);">
                                 <i data-lucide="star" style="width:16px;height:16px;fill:currentColor"></i>
                                 {% if avg_rating > 0 %}{{ avg_rating }} / 5.0{% else %}No ratings{% endif %}

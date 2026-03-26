@@ -12,3 +12,6 @@ python manage.py collectstatic --no-input
 
 echo "Running migrations..."
 python manage.py migrate --no-input
+
+echo "Seeding demo data..."
+python manage.py seed_data

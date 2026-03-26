@@ -29,7 +29,7 @@ class TutorProfileInline(admin.StackedInline):
             'fields': ('address', 'latitude', 'longitude', 'teaching_method', 'subjects', 'languages'),
         }),
         ('Pricing & Status', {
-            'fields': ('price_per_hour', 'is_verified', 'is_published', 'payment_completed', 'onboarding_step'),
+            'fields': ('price_per_hour', 'is_published', 'payment_completed', 'onboarding_step'),
         }),
     )
 
@@ -79,10 +79,10 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(TutorProfile)
 class TutorProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'age', 'teaching_method', 'price_per_hour', 'is_verified', 'is_published', 'payment_completed')
-    list_filter = ('is_verified', 'is_published', 'payment_completed', 'teaching_method', 'gender')
+    list_display = ('user', 'age', 'teaching_method', 'price_per_hour', 'is_published', 'payment_completed')
+    list_filter = ('is_published', 'payment_completed', 'teaching_method', 'gender')
     search_fields = ('user__full_name', 'user__email', 'address')
-    list_editable = ('is_verified', 'is_published')
+    list_editable = ('is_published',)
     readonly_fields = ('created_at', 'updated_at')
 
 

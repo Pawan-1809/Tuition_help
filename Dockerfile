@@ -47,5 +47,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')" || exit 1
 
-# Default command: migrate first, then run ASGI server.
-CMD ["sh", "-c", "python manage.py migrate --no-input && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application"]
+# Default command: migrate, seed demo data, then run ASGI server.
+CMD ["sh", "-c", "python manage.py migrate --no-input && python manage.py seed_data && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application"]
