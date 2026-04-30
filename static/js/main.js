@@ -1,18 +1,11 @@
-/* ============================================
-   Tuition Connect — Main JavaScript
-   ============================================
-   Lenis smooth scrolling, GSAP animations,
-   navbar behavior, and global utilities.
-   ============================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── Initialize Lucide Icons ────────────────
+    // Initialise Lucide Icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 
-    // ── Select2 Initialization ─────────────────
+    // Select2 Initialisation
     if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
         jQuery('.neu-select-multiple').select2({
             placeholder: "Select options",
@@ -55,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Lenis not loaded, using native scrolling');
     }
 
-    // ── Navbar Scroll Effect ───────────────────
+    // Nav Scroll Effect
     const navbar = document.getElementById('navbar');
     if (navbar) {
         let lastScroll = 0;
@@ -70,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Mobile Nav Toggle ──────────────────────
+    // Mobile Nav Toggle
     const navToggle = document.getElementById('nav-toggle');
     const navLinks = document.getElementById('nav-links');
     if (navToggle && navLinks) {
@@ -88,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── GSAP Scroll Reveal Animations ──────────
+    // GSAP Scroll Reveal
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
 
         // Fade up reveals
@@ -164,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Hero animations (if on landing page)
+        // Hero animations
         const heroTag = document.querySelector('.hero-tag');
         const heroTitle = document.querySelector('.hero h1');
         const heroSubtitle = document.querySelector('.hero-subtitle');
@@ -192,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── Auto-dismiss Alerts ────────────────────
+    // Auto-dismis Alert
     document.querySelectorAll('.alert').forEach((alert) => {
         setTimeout(() => {
             alert.style.transition = 'all 0.4s ease';
@@ -202,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000);
     });
 
-    // ── Counter Animation ──────────────────────
+    // Counter Animation
     function animateCounter(el, target, duration = 2000) {
         let start = 0;
         const increment = target / (duration / 16);

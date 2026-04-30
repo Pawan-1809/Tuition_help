@@ -11,15 +11,12 @@ from dotenv import load_dotenv
 # Load .env file
 load_dotenv()
 
-# ── Paths ───────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# ── Security ────────────────────────────────────────────
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'insecure-dev-key-change-in-production')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'insecure-dev-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# ── Application Definition ─────────────────────────────
 DJANGO_APPS = [
     'daphne',
     'django.contrib.admin',
@@ -53,7 +50,7 @@ LOCAL_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# ── Middleware ──────────────────────────────────────────
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -70,7 +67,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-# ── Templates ───────────────────────────────────────────
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -90,10 +87,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-# ── Custom User Model ──────────────────────────────────
+
 AUTH_USER_MODEL = 'accounts.User'
 
-# ── Password Validation ────────────────────────────────
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -101,29 +98,29 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ── Internationalization ───────────────────────────────
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# ── Static Files ───────────────────────────────────────
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ── Media Files ────────────────────────────────────────
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ── Default Primary Key ───────────────────────────────
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ── Sites Framework ───────────────────────────────────
+
 SITE_ID = 1
 
-# ── Django Allauth ─────────────────────────────────────
+
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
@@ -158,7 +155,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-# ── Razorpay ───────────────────────────────────────────
+
 RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', '')
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '')
 RAZORPAY_WEBHOOK_SECRET = os.getenv('RAZORPAY_WEBHOOK_SECRET', '')
@@ -167,17 +164,17 @@ RAZORPAY_REGISTRATION_FEE = int(os.getenv('RAZORPAY_REGISTRATION_FEE', '499'))
 # Demo toggle: allow publishing tutor profiles without payment.
 DEMO_BYPASS_PAYMENT = os.getenv('DEMO_BYPASS_PAYMENT', 'True').lower() in ('true', '1', 'yes')
 
-# ── OTP Settings ───────────────────────────────────────
+
 OTP_EXPIRY_SECONDS = int(os.getenv('OTP_EXPIRY_SECONDS', '300'))
 
-# ── CORS ───────────────────────────────────────────────
+
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
 
-# ── Developer Credits ─────────────────────────────────
+
 DEVELOPER_CREDITS = {
     'name': 'Pawan Kumar',
     'website': 'https://pawan-portfolio-dev.vercel.app/',
@@ -186,14 +183,14 @@ DEVELOPER_CREDITS = {
     'email': 'pawankr16123114@gmail.com',
 }
 
-# ── Channels ───────────────────────────────────────────
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 
-# -- Security & Authentication Policies -----------------
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',

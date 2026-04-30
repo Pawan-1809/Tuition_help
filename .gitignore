@@ -56,3 +56,6 @@ coverage.xml
 
 # Node (if any frontend tooling)
 node_modules/
+
+
+ARCHITECTURE.md
